@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const voitureSchema = new mongoose.Schema({
-  idVoiture: { type: String, unique: true },
+  idVoiture: { type: String, required: true },
   marque: { type: String, required: true, trim: true },
   modele: { type: String, required: true, trim: true },
   prixParJour: { type: Number, required: true, min: 0 },

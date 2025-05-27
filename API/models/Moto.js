@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 
 const motoSchema = new mongoose.Schema({
-    idMoto: { type: String, unique: true },
+    idMoto: { type: String, required: true },
     marque: { type: String, required: true, trim: true },
     modele: { type: String, required: true, trim: true },
     prixParJour: { type: Number, required: true, min: 0 },
     imageUrls: { type: [String], required: true },
-    photosVerification: { type: [String] },
-    notesVerification: { type: Number, min: 0, max: 5 },
     description: { type: String, maxlength: 500 },
     carburant: { type: String, enum: ['essence', 'diesel', 'électrique', 'hybride'], required: true },
     boiteVitesse: { type: String, enum: ['manuelle', 'automatique'], required: true },

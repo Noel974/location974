@@ -11,8 +11,10 @@ const authRoutes = require('./routes/authRoutes'); // Gestion des connexions
 const employeRoutes = require('./routes/employeRoutes'); // Gestion des employés
 const clientRoutes = require('./routes/clientRoutes'); // Gestion des clients
 const voitureRoutes = require('./routes/voitureRoutes'); // Gestion des voitures
+const avisRoutes = require('./routes/avisRoutes');
+const dashboardRoutes = require ('./routes/dashboardRoutes');
 const motoRoutes = require('./routes/motoRoutes'); // Gestion des motos
-
+const entretienRoutes = require('./routes/entretienRoutes');
 
 // Activation du cron
 require('./cron/passwordGenerator');
@@ -34,6 +36,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log(`🔍 Requête statique : ${req.method} ${req.url}`);
+    next();
+});
+
+
 // Configuration des routes
 // Configuration des routes
 app.use('/api/auth', authRoutes); // Authentification (admin, employé, client)
@@ -41,6 +49,9 @@ app.use('/api/employes', employeRoutes); // Gestion des employés
 app.use('/api/clients', clientRoutes); // Gestion des clients
 app.use('/api/voitures', voitureRoutes); // Gestion des voitures
 app.use('/api/moto', motoRoutes); // Gestion des motos
+app.use('/api/avis', avisRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/entretien", entretienRoutes);
 
 
 // Connexion à la base de données
