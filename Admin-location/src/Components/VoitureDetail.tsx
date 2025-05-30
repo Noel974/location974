@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import EntretienForm from './EntretienForm';
+
 
 interface VoitureDetailProps {
   voiture: any;
@@ -9,6 +11,7 @@ interface VoitureDetailProps {
 const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
   const [imageActive, setImageActive] = useState(voiture.imageUrls[0]);
   const navigate = useNavigate();
+const [showEntretienForm, setShowEntretienForm] = useState(false);
 
   const handleEdit = () => {
     navigate(`/modifier-voiture/${voiture._id}`);
@@ -22,12 +25,10 @@ const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
       onClose(); // revenir à la liste
     }
   };
+const handleMaintenance = () => {
+  setShowEntretienForm(true);
+};
 
-  const handleMaintenance = () => {
-    // 🔁 Logique de mise en entretien (API ou local)
-    console.log("🚧 Mise en entretien de la voiture", voiture._id);
-    alert("Voiture mise en entretien (simulé).");
-  };
 
   return (
     <div className="voiture-detail">
@@ -65,7 +66,9 @@ const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
       <div className="d-flex gap-2 mt-4">
         <button onClick={handleEdit} className="btn btn-warning">🛠️ Modifier</button>
         <button onClick={handleDelete} className="btn btn-danger">🗑️ Supprimer</button>
-        <button onClick={handleMaintenance} className="btn btn-secondary">🔧 Mise en entretien</button>
+        <button onClick={handleMaintenance} className="btn btn-secondary">Entretien{showEntretienForm && (
+  <EntretienForm voiture={voiture} onClose={() => setShowEntretienForm(false)} />
+)}</button>
       </div>
     </div>
   );

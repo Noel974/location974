@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3100/api/moto';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 
 export const getMotos = async () => {
-  const res = await axios.get(API_BASE);
+  const res = await axios.get(`${API_BASE}/moto`);
   return res.data;
 };
 
 export const getMotoById = async (id: string) => {
   console.log("🔍 Récupération de la moto ID:", id); 
-  const res = await axios.get(`${API_BASE}/${id}`);
+  const res = await axios.get(`${API_BASE}/moto/${id}`);
   return res.data;
   
 };
@@ -25,7 +25,7 @@ export const serviceCreateMoto = async (data: FormData) => {
 
   try {
     const response = await axios.post(
-      API_BASE,
+     `${API_BASE}/moto`,
       data,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -41,7 +41,7 @@ export const updateMoto = async (id: string, data: FormData) => {
   console.log("✏️ Mise à jour de la moto ID:", id);
 
   try {
-    const response = await axios.put(`${API_BASE}/${id}`, data, {
+    const response = await axios.put(`${API_BASE}/moto/${id}`, data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
@@ -54,7 +54,7 @@ export const deleteMotoById = async (id: string) => {
     console.log("🗑️ Suppression du véhicule avec l'id :", id);
 
     try {
-        const res = await fetch(`${API_BASE}/${id}`, {
+        const res = await fetch(`${API_BASE}/moto/${id}`, {
             method: "DELETE",
         });
 

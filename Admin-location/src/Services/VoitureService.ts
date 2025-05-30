@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3100/api/voitures';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export const getVoitures = async () => {
-  const res = await axios.get(API_BASE);
+  const res = await axios.get(`${API_BASE}/voitures`);
   return res.data;
 };
 
 export const getVoitureById = async (id: string) => {
   console.log("🔍 Récupération de la voiture ID:", id); 
-  const res = await axios.get(`${API_BASE}/${id}`);
+  const res = await axios.get(`${API_BASE}/voitures/${id}`);
   return res.data;
 };
 
@@ -21,7 +21,7 @@ export const serviceCreateVoiture = async (data: FormData) => {
 
   try {
     const response = await axios.post(
-      API_BASE,
+      (`${API_BASE}/voitures`),
       data,
       {
         headers: { "Content-Type": "multipart/form-data" },

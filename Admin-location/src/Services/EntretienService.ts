@@ -1,75 +1,64 @@
-import axios, { AxiosError } from 'axios';
+import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_URL;
 
-const API_URL = 'http://localhost:3100/api/entretien';
-
-export interface EntretienData {
+export const serviceCreateEntretien = async (data: {
+  idEntretien: string;
   idVehicule: string;
-  typeVehicule: 'voiture' | 'moto';
+  typeVehicule: string;
   typeEntretien: string;
   dateEntretien: string;
   coût: number;
   commentaire?: string;
-}
-
-export interface Entretien extends EntretienData {
-  _id: string;
-  idEntretien: string;
-}
-
-const EntretienService = {
-  // Ajouter un entretien
-  createEntretien: async (data: FormData): Promise<Entretien> => {
-    try {
-      const response = await axios.post<Entretien>(API_URL, data, {
-        withCredentials: true, // retire si tu n'utilises pas de cookies d'auth
-      });
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      console.error("Erreur lors de l'ajout de l'entretien :", err.message);
-      throw err;
-    }
-  },
-
-  // Récupérer tous les entretiens
-  getEntretiens: async (): Promise<Entretien[]> => {
-    try {
-      const response = await axios.get<Entretien[]>(API_URL);
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      console.error("Erreur lors de la récupération des entretiens :", err.message);
-      throw err;
-    }
-  },
-
-  // Modifier un entretien (optionnel)
-  updateEntretien: async (id: string, data: Partial<EntretienData>): Promise<Entretien> => {
-    try {
-      const response = await axios.put<Entretien>(`${API_URL}/${id}`, data, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      console.error("Erreur lors de la modification de l'entretien :", err.message);
-      throw err;
-    }
-  },
-
-  // Supprimer un entretien (optionnel)
-  deleteEntretien: async (id: string): Promise<{ message: string }> => {
-    try {
-      const response = await axios.delete<{ message: string }>(`${API_URL}/${id}`, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      console.error("Erreur lors de la suppression de l'entretien :", err.message);
-      throw err;
-    }
-  },
+}) => {
+  try {
+    const response = await axios.post(`${API_BASE}/entretien`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Erreur création entretien:", error.response?.data || error.message);
+    throw new Error("Erreur lors de la création de l'entretien.");
+  }
 };
 
-export default EntretienService;
+
+export const getEntretien = async () => {
+  try {
+    const res = await axios.get(`${API_BASE}/entretien`);
+    return res.data;
+  } catch (error) {
+    console.error("❌ Erreur récupération entretiens:", error);
+    throw new Error("Erreur lors de la récupération des entretiens.");
+  }
+};
+
+export const getEntretienById = async (id: string) => {
+  console.log("🔍 Récupération de l'entretien ID:", id);
+  try {
+    const res = await axios.get(`${API_BASE}/entretien/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error(`❌ Erreur récupération entretien ID ${id}:`, error);
+    throw new Error("Erreur lors de la récupération de l'entretien.");
+  }
+};
+
+export const updateEntretien = async (id: string, data: FormData) => {
+  try {
+    const response = await axios.put(`${API_BASE}/entretien/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Erreur mise à jour entretien ID ${id}:`, error);
+    throw new Error("Erreur lors de la mise à jour de l'entretien.");
+  }
+};
+
+export const deleteEntretien = async (id: string) => {
+  try {
+    const response = await axios.delete(`${API_BASE}/entretien/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Erreur suppression entretien ID ${id}:`, error);
+    throw new Error("Erreur lors de la suppression de l'entretien.");
+  }
+};

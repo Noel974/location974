@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import EntretienService from '../Services/EntretienService';
+import { getEntretien } from '../Services/EntretienService';
 
 interface Entretien {
   _id: string;
   idEntretien: string;
+  idVehicule:string;
   typeVehicule: string;
   typeEntretien: string;
   dateEntretien: string;
@@ -17,17 +18,17 @@ const ListeEntretiens: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchEntretiens = async () => {
-      try {
-        const data = await EntretienService.getEntretiens();
-        setEntretiens(data);
-      } catch (err) {
-        setError('Erreur lors du chargement des entretiens');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetchEntretiens = async () => {
+  try {
+    const data = await getEntretien();
+    setEntretiens(data);
+  } catch (err) {
+    setError('Erreur lors du chargement des entretiens');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchEntretiens();
   }, []);
