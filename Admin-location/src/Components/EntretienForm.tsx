@@ -26,7 +26,7 @@ const EntretienForm: React.FC<Props> = ({ voiture, moto, onClose }) => {
     try {
       await serviceCreateEntretien({
         idEntretien: new Date().getTime().toString(),
-        idVehicule: voiture?._id || moto?._id, 
+        idVehicule: voiture?._id ?? moto?._id ?? "", 
         typeVehicule: voiture ? 'voiture' : 'moto', 
         typeEntretien: form.typeEntretien,
         dateEntretien: form.dateEntretien,

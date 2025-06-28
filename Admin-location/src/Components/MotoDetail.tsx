@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {deleteMotoById, updateMoto} from "../Services/MotoService";
 import EntretienForm from './EntretienForm';
+import EditVehicleForm from "./ModifierForm";
 
 interface MotoDetailProps {
   moto: {
@@ -20,24 +21,28 @@ interface MotoDetailProps {
 
 const MotoDetail = ({ moto, onClose }: MotoDetailProps) => {
   const [imageActive, setImageActive] = useState(moto.imageUrls[0]);
-  const navigate = useNavigate();
-  const [showEntretienForm, setShowEntretienForm] = useState(false);
+const [showEditForm, setShowEditForm] = useState(false);
+const [showEntretienForm, setShowEntretienForm] = useState(false);
 
-  const handleEdit = () => {
-    navigate(`/modifier-moto/${moto._id}`);
-  };
+// Remplace l'ancien handleEdit :
+const handleEditClick = () => {
+  setShowEditForm(!showEditForm);
+};
 
-  const handleDelete = () => {
-    if (window.confirm("🗑️ Êtes-vous sûr de vouloir supprimer cette moto ?")) {
+const handleDelete = async () => {
+  if (window.confirm("🗑️ Êtes-vous sûr de vouloir supprimer cette moto ?")) {
+    try {
       console.log("Suppression moto", moto._id);
-      // Exemple : await deleteMoto(moto._id);
-      onClose();
+      await deleteMotoById(moto._id);
+      alert("✅ Moto supprimée avec succès !");
+      onClose(); // Ferme la vue détail
+    } catch (error) {
+      alert("❌ Une erreur est survenue lors de la suppression.");
+      console.error(error);
     }
-  };
+  }
+};
 
-  const handleMaintenance = () => {
-    setShowEntretienForm(true);
-  };
 
   const resolveUrl = (url: string) => {
     return url.startsWith("http") ? url : `http://localhost:3100${url}`;
@@ -87,14 +92,66 @@ const MotoDetail = ({ moto, onClose }: MotoDetailProps) => {
         <p><strong>Kilométrage:</strong> {moto.kilometrage} km</p>
         <p><strong>Mise en service:</strong> {new Date(moto.dateMiseEnService).toLocaleDateString()}</p>
 
+        {/* Boutons Modifier et Entretien */}
         <div className="d-flex gap-2 mt-4">
-          <button onClick={handleEdit} className="btn btn-warning">🛠️ Modifier</button>
-          <button onClick={handleDelete} className="btn btn-danger">🗑️ Supprimer</button>
-                  <button onClick={handleMaintenance} className="btn btn-secondary">Entretien{showEntretienForm && (
-  <EntretienForm moto={moto} onClose={() => setShowEntretienForm(false)} />
-)}</button>
+    <button onClick={handleEditClick} className="btn btn-warning">
+    {showEditForm ? "❌ Fermer Édition" : "🛠️ Modifier"}
+  </button>
+          <button onClick={() => setShowEntretienForm(!showEntretienForm)} className="btn btn-secondary">
+            {showEntretienForm ? "❌ Fermer Entretien" : "🔧 Entretien"}
+          </button>
         </div>
-      
+{showEditForm && (
+  <div className="accordion mt-3" id="editAccordion">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingEdit">
+        <button
+          className="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseEdit"
+          aria-expanded="true"
+          aria-controls="collapseEdit"
+        >
+          Modifier la moto
+        </button>
+      </h2>
+      <div
+        id="collapseEdit"
+        className="accordion-collapse collapse show"
+        aria-labelledby="headingEdit"
+      >
+        <div className="accordion-body">
+    <EditVehicleForm vehicle={moto} onUpdate={updateMoto} onClose={onClose} type="moto" />
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+        {/* Accordion entretien */}
+        {showEntretienForm && (
+          <div className="accordion mt-3" id="entretienAccordion">
+            <div className="accordion-item">
+              <h2 className="accordion-header" id="headingEntretien">
+                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEntretien" aria-expanded="true" aria-controls="collapseEntretien">
+                  Formulaire d'entretien
+                </button>
+              </h2>
+              <div id="collapseEntretien" className="accordion-collapse collapse show" aria-labelledby="headingEntretien">
+                <div className="accordion-body">
+                  <EntretienForm moto={moto} onClose={() => setShowEntretienForm(false)} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bouton Supprimer déplacé ici */}
+      <div className="mt-4 text-end">
+        <button onClick={handleDelete} className="btn btn-outline-danger">
+          🗑️ Supprimer cette moto
+        </button>
       </div>
     </div>
   );

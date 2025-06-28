@@ -51,22 +51,23 @@ export const updateMoto = async (id: string, data: FormData) => {
 };
 
 export const deleteMotoById = async (id: string) => {
-    console.log("🗑️ Suppression du véhicule avec l'id :", id);
+  console.log("🗑️ Suppression du véhicule avec l'id :", id);
 
-    try {
-        const res = await fetch(`${API_BASE}/moto/${id}`, {
-            method: "DELETE",
-        });
+  try {
+    const res = await fetch(`${API_BASE}/moto/${id}`, {
+      method: "DELETE",
+    });
 
-        if (!res.ok) {
-            throw new Error(`❌ Erreur lors de la suppression de la moto. Code: ${res.status}`);
-        }
-
-        console.log("✅ Moto supprimée avec succès !");
-    } catch (error) {
-        console.error("❌ Erreur DELETE:", error);
-        throw error;
+    if (!res.ok) {
+      throw new Error(`❌ Erreur lors de la suppression de la moto. Code: ${res.status}`);
     }
+
+    console.log("✅ Moto supprimée avec succès !");
+  } catch (error) {
+    console.error("❌ Erreur DELETE:", error);
+    throw error;
+  }
 };
+
 
 

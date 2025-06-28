@@ -138,17 +138,24 @@ exports.deleteMotoById = async (req, res) => {
       return res.status(404).json({ message: "Moto non trouvée." });
     }
 
-    // Tu pourrais ici supprimer les images de Cloudinary si tu stockes les `public_id`
+    // Suppression des images sur Cloudinary
+    if (moto.imageUrls && moto.imageUrls.length > 0) {
+      await Promise.all(
+        moto.imageUrls.map(async (imageUrl) => {
+          const publicId = imageUrl.split("/").pop().split(".")[0]; // Extraction du public_id Cloudinary
+          await cloudinary.uploader.destroy(publicId);
+        })
+      );
+    }
 
+    // Supprimer la moto de la base de données
     await Moto.findByIdAndDelete(req.params.id);
 
-    res.status(204).send();
+    res.status(200).json({ message: "Moto et images supprimées avec succès." });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Erreur lors de la suppression de la moto.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Erreur lors de la suppression de la moto et des images.",
+      error: error.message,
+    });
   }
 };

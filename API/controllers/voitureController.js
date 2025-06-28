@@ -91,42 +91,65 @@ exports.getVoitureById = async (req, res) => {
     }
 };
 
-// Mise à jour d'une voiture
+// Mettre à jour une voiture (admin uniquement)
 exports.updateVoiture = async (req, res) => {
-    try {
-        console.log("🛠️ Mise à jour voiture ID:", req.params.id);
-        console.log("📩 Données reçues pour mise à jour:", req.body);
+  try {
+    const updates = { ...req.body };
 
-        const voiture = await Voiture.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!voiture) {
-            console.warn("⚠️ Voiture non trouvée pour mise à jour !");
-            return res.status(404).json({ message: "Voiture non trouvée." });
-        }
-
-        console.log("✅ Voiture mise à jour:", voiture);
-        res.status(200).json(voiture);
-
-    } catch (error) {
-        console.error("🚨 Erreur mise à jour voiture:", error.message);
-        res.status(500).json({ message: "Erreur lors de la mise à jour de la voiture.", error: error.message });
+    if (req.files?.photoPrincipale?.[0]) {
+      updates.photoPrincipale = req.files.photoPrincipale[0].path;
     }
+
+    if (req.files?.autresPhotos) {
+      updates.autresPhotos = req.files.autresPhotos.map((p) => p.path);
+    }
+
+    const voiture = await voiture.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+    });
+
+    if (!voiture) {
+      return res.status(404).json({ message: "voiture non trouvée." });
+    }
+
+    res.status(200).json(voiture);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Erreur lors de la mise à jour de la voiture.",
+        error: error.message,
+      });
+  }
 };
 
 // Supprimer une voiture
-exports.deleteVoiture = async (req, res) => {
-    try {
-        console.log("🗑️ Suppression voiture ID:", req.params.id);
-        const voiture = await Voiture.findByIdAndDelete(req.params.id);
-        if (!voiture) {
-            console.warn("⚠️ Voiture non trouvée pour suppression !");
-            return res.status(404).json({ message: "Voiture non trouvée." });
-        }
-
-        console.log("✅ Voiture supprimée avec succès !");
-        res.status(204).send(); // Aucun contenu retourné
-
-    } catch (error) {
-        console.error("🚨 Erreur suppression voiture:", error.message);
-        res.status(500).json({ message: "Erreur lors de la suppression de la voiture.", error: error.message });
+exports.deleteVoitureById = async (req, res) => {
+  try {
+    const voiture = await voiture.findById(req.params.id);
+    if (!voiture) {
+      return res.status(404).json({ message: "voiture non trouvée." });
     }
+
+    // Suppression des images sur Cloudinary
+    if (voiture.imageUrls && voiture.imageUrls.length > 0) {
+      await Promise.all(
+        voiture.imageUrls.map(async (imageUrl) => {
+          const publicId = imageUrl.split("/").pop().split(".")[0]; // Extraction du public_id Cloudinary
+          await cloudinary.uploader.destroy(publicId);
+        })
+      );
+    }
+
+    // Supprimer la voiture de la base de données
+    await voiture.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: "voiture et images supprimées avec succès." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Erreur lors de la suppression de la voiture et des images.",
+      error: error.message,
+    });
+  }
 };
+

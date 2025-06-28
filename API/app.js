@@ -56,7 +56,7 @@ app.use("/api/entretien", entretienRoutes);
 
 // Connexion à la base de données
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => app.listen(3000, () => console.log('API démarrée sur http://localhost:3100')))
+    .then(() => app.listen(3100, () => console.log('API démarrée sur http://localhost:3100')))
     .catch(err => console.error('Erreur de connexion à MongoDB :', err));
 
 

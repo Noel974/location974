@@ -1,0 +1,60 @@
+[
+  {
+    "theme": "Comment créer un compte",
+    "qa": [
+      {
+        "question": "Comment créer un compte sur AutoMotoPro ?",
+        "answer": "Pour créer un compte, cliquez sur le bouton 'Se connecter' en haut à droite puis sur 'S'inscrire'. Remplissez le formulaire et validez."
+      },
+      {
+        "question": "Puis-je créer plusieurs comptes ?",
+        "answer": "Non, chaque utilisateur ne peut avoir qu’un seul compte par adresse email."
+      }
+    ]
+  },
+  {
+    "theme": "Comment réserver",
+    "qa": [
+      {
+        "question": "Comment réserver une voiture ?",
+        "answer": "Après avoir sélectionné une voiture, cliquez sur 'Réserver', choisissez vos dates et validez."
+      }
+    ]
+  },
+  {
+    "theme": "Les différents modes de paiement",
+    "qa": [
+      {
+        "question": "Quels modes de paiement acceptez-vous ?",
+        "answer": "Nous acceptons carte bancaire, PayPal, et virement bancaire."
+      }
+    ]
+  },
+  {
+    "theme": "Déclarer un sinistre",
+    "qa": [
+      {
+        "question": "Comment déclarer un sinistre ?",
+        "answer": "Connectez-vous à votre compte, rendez-vous dans 'Mes sinistres' et remplissez le formulaire de déclaration."
+      }
+    ]
+  },
+  {
+    "theme": "Voir son historique de location",
+    "qa": [
+      {
+        "question": "Comment voir mon historique de location ?",
+        "answer": "Dans votre profil, cliquez sur 'Historique' pour consulter toutes vos locations passées."
+      }
+    ]
+  },
+  {
+    "theme": "Voir sa pénalité",
+    "qa": [
+      {
+        "question": "Comment consulter mes pénalités ?",
+        "answer": "Dans votre compte, la section 'Pénalités' vous donne le détail de toutes vos pénalités en cours."
+      }
+    ]
+  }
+]

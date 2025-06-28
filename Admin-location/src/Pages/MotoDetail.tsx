@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MotoDetail from "../Components/MotoDetail";
 import { getMotoById } from "../Services/MotoService";
 
 const motoDetailPage = () => {
   const { id } = useParams(); // Récupère l'ID dans l'URL
   const [moto, setMoto] = useState<any | null>(null);
-  const navigate = useNavigate(); // pour rediriger après suppression
 
   useEffect(() => {
     const fetchData = async () => {
