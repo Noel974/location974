@@ -22,8 +22,8 @@ const Footer: React.FC = () => {
           <Col md={4} className="text-center mb-3 mb-md-0">
             <Nav className="justify-content-center">
               <Nav.Link href="/" className="text-light px-2">Home</Nav.Link>
-              <Nav.Link href="/voitures" className="text-light px-2">Voiture</Nav.Link>
-              <Nav.Link href="/motos" className="text-light px-2">Moto</Nav.Link>
+              <Nav.Link href="/Voiture" className="text-light px-2">Voiture</Nav.Link>
+              <Nav.Link href="/Moto" className="text-light px-2">Moto</Nav.Link>
             </Nav>
           </Col>
 

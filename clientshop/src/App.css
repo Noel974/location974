@@ -1,0 +1,38 @@
+.colored-row {
+  border: 3px solid #0d6efd; /* Couleur de la bordure */
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 60px; /* ✅ Espace entre chaque Row */
+  background-color: #f8f9fa;
+}
+
+.map {
+padding-left: 250px;
+}
+
+
+/*carouselµ+*/
+
+.carousel-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-frame {
+  width: 80%; /* ajuste selon le rendu désiré */
+  border: 3px solid #ccc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+h3{color: black}
+p{color:black}
+
+.image-row {
+  display: flex;
+}
+
+.image-spaced {
+  margin-right: 16px; /* ou la valeur que tu veux */
+}

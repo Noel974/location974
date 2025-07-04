@@ -5,6 +5,9 @@ const authClient = require('../middleware/authClient');
 const authAdmin = require('../middleware/authAdmin'); // Pour suppression admin
 
 // Routes accessibles aux clients eux-mêmes
+router.post('/register', clientController.createClient);
+router.post('/login', clientController.loginClient); 
+
 router.get('/profile', authClient, clientController.getClientProfile);
 router.put('/profile', authClient, clientController.updateClientProfile);
 

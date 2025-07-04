@@ -6,11 +6,13 @@ const Home: React.FC = () => {
   return (
     <>
       {/* Carousel Hero */}
+      <Container className="carousel-wrapper my-4">
+  <div className="carousel-frame">
       <Carousel>
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="/assets/hero/societe.jpg"
+            src="/assets/auto.jpeg"
             alt="Notre société"
           />
           <Carousel.Caption>
@@ -22,7 +24,7 @@ const Home: React.FC = () => {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="/assets/hero/voiture.jpg"
+            src="/assets/car.webp"
             alt="Nos voitures"
           />
           <Carousel.Caption>
@@ -34,7 +36,7 @@ const Home: React.FC = () => {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="/assets/hero/moto.jpg"
+            src="/assets/moto.webp"
             alt="Nos motos"
           />
           <Carousel.Caption>
@@ -43,9 +45,13 @@ const Home: React.FC = () => {
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
+  </div>
+  </Container>
+
 
       {/* Section À propos */}
       <Container className="mt-5">
+              <h2 className="pb-2 border-bottom">À propos de nous</h2>
         <AboutSection/>
       </Container>
     </>

@@ -21,25 +21,25 @@ require('./cron/passwordGenerator');
 
 const app = express();
 
-// Configuration des middlewares
-app.use(express.json());
-app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
-// Définition des headers CORS
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    next();
-});
+const allowedOrigins = [
+  "http://localhost:5173", // dev
+  "https://admin-locationvoiture.netlify.app", // admin en prod
+"https://auto-localuxe.netlify.app"
+];
 
-app.use((req, res, next) => {
-    console.log(`🔍 Requête statique : ${req.method} ${req.url}`);
-    next();
-});
+app.use(cors({
+  origin: function (origin, callback) {
+    // autorise l'absence d'origin (ex: Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Origine non autorisée par CORS"));
+    }
+  },
+  credentials: true, // nécessaire si tu envoies des cookies ou des headers d'auth
+}));
+
 
 
 // Configuration des routes

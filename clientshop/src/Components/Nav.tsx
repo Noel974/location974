@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-    Button,
-    Container,
-    Dropdown,
-    Form,
-    Modal,
-    Nav,
-    Navbar,
+  Button,
+  Container,
+  Dropdown,
+  Form,
+  Modal,
+  Nav,
+  Navbar,
 } from 'react-bootstrap';
 
 const CustomNavbar: React.FC = () => {
@@ -74,8 +74,8 @@ const CustomNavbar: React.FC = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="#voiture">Voiture</Nav.Link>
-              <Nav.Link href="#moto">Moto</Nav.Link>
+              <Nav.Link href="/Voiture">Voiture</Nav.Link>
+              <Nav.Link href="/Moto">Moto</Nav.Link>
             </Nav>
 
             <Nav className="ms-auto">
