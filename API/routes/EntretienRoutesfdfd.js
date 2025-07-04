@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const entretienController = require('../controllers/EntretienController');
+const entretienController = require('../controllers/EntretienControllerfdfd');
 
 router.post('/', entretienController.createEntretien);
 router.put('/:id', entretienController.updateEntretien);

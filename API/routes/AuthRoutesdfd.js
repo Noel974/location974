@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/AuthController');
+const authController = require('../controllers/AuthControllerdf');
 
 // Routes pour chaque type d'utilisateur
 router.post('/admin/login', authController.loginAdmin);
