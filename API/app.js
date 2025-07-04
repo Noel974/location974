@@ -45,6 +45,9 @@ const entretienRoutes = require('./routes/entretienRoutes');
 require('./cron/passwordGenerator');
 
 // 🛣️ Montage des routes
+app.get("/", (req, res) => {
+  res.send("✅ API Location fonctionne !");
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/employes', employeRoutes);
 app.use('/api/clients', clientRoutes);
