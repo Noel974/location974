@@ -42,7 +42,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const entretienRoutes = require('./routes/entretienRoutes');
 
 // 🔁 Cron Job
-require('./cron/passwordGenerator');
+require('./cron/PasswordGenerator');
 
 // 🛣️ Montage des routes
 app.get("/", (req, res) => {

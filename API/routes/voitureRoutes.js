@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const voitureController = require('../controllers/voitureController');
-const upload = require('../middleware/multer-config')
+const voitureController = require('../controllers/VoitureController');
+const upload = require('../middleware/Multer-config')
 
 // Routes CRUD restreintes aux admins
 router.post('/',upload, voitureController.createVoiture);

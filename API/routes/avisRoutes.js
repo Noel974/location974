@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const avisController = require('../controllers/avisController');
-const authClient = require('../middleware/authClient');
+const avisController = require('../controllers/AvisController');
+const authClient = require('../middleware/AuthClient');
 
 // Route pour ajouter un avis (seuls les clients)
 router.post('/', authClient, avisController.createAvis);
