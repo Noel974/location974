@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const motoController = require('../controllers/MotoControllerdfdf');
+const motoController = require('../controllers/MotoController');
 const authAdmin = require('../middleware/AuthAdmin');
 const upload = require('../middleware/Multer-config'); // Cloudinary + multer configuré
 

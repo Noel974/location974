@@ -32,14 +32,14 @@ app.use(cors({
 }));
 
 // 📦 Importation des routes
-const authRoutes = require('./routes/AuthRoutesdfd');
-const employeRoutes = require('./routes/EmployeRoutesdsds');
-const clientRoutes = require('./routes/ClientRoutesdfdf');
-const voitureRoutes = require('./routes/VoitureRoutesfdfdf');
-const motoRoutes = require('./routes/MotoRoutesdfdf');
-const avisRoutes = require('./routes/AvisRoutesfdfd');
-const dashboardRoutes = require('./routes/DashboardRoutesdsds');
-const entretienRoutes = require('./routes/EntretienRoutesfdfd');
+const authRoutes = require('./routes/AuthRoutes');
+const employeRoutes = require('./routes/EmployeRoutes');
+const clientRoutes = require('./routes/ClientRoutes');
+const voitureRoutes = require('./routes/VoitureRoutes');
+const motoRoutes = require('./routes/MotoRoutes');
+const avisRoutes = require('./routes/AvisRoutes');
+const dashboardRoutes = require('./routes/DashboardRoutes');
+const entretienRoutes = require('./routes/EntretienRoutes');
 
 // 🔁 Cron Job
 require('./cron/PasswordGenerator');

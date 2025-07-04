@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const avisController = require('../controllers/AvisControllerde');
+const avisController = require('../controllers/AvisController');
 const authClient = require('../middleware/AuthClient');
 
 // Route pour ajouter un avis (seuls les clients)
