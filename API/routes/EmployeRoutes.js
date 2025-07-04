@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const employeController = require('../controllers/EmployeController');
-const authAdmin = require('../middleware/AuthAdmin'); // Vérifie que l'utilisateur est admin
+const authAdmin = require('../middleware/AuthAdminfff'); // Vérifie que l'utilisateur est admin
 
 // Routes CRUD restreintes aux admins
 router.post('/', authAdmin, employeController.createEmploye);

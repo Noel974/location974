@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const motoController = require('../controllers/MotoController');
-const authAdmin = require('../middleware/AuthAdmin');
-const upload = require('../middleware/Multer-config'); // Cloudinary + multer configuré
+const authAdmin = require('../middleware/AuthAdminfff');
+const upload = require('../middleware/Multer-configdsds'); // Cloudinary + multer configuré
 
 // 🛡 Routes protégées (admin uniquement)
 router.post('/', upload, motoController.createMoto);

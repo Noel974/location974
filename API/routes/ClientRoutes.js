@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const clientController = require('../controllers/ClientController');
-const authClient = require('../middleware/AuthClient');
-const authAdmin = require('../middleware/AuthAdmin'); // Pour suppression admin
+const authClient = require('../middleware/AuthClientddfd');
+const authAdmin = require('../middleware/AuthAdminfff'); // Pour suppression admin
 
 // Routes accessibles aux clients eux-mêmes
 router.post('/register', clientController.createClient);
