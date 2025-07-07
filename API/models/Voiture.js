@@ -16,4 +16,4 @@ const voitureSchema = new mongoose.Schema({
   estLouee: { type: Boolean, default: false }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Voiture', voitureSchema, voitures);
+module.exports = mongoose.model('Voiture', voitureSchema, 'voitures');
