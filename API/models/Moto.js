@@ -17,4 +17,4 @@ const motoSchema = new mongoose.Schema({
   }, { timestamps: true });
   
 
-module.exports = mongoose.model('moto', motoSchema);
+module.exports = mongoose.model('moto', motoSchema, motos);

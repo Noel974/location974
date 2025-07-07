@@ -10,4 +10,4 @@ const adminSchema = new mongoose.Schema({
   employesAdmin: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Employe' }] // Liste des employés devenus admin
 });
 
-module.exports = mongoose.model('Admin', adminSchema);
+module.exports = mongoose.model('Admin', adminSchema, admins);
