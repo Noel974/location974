@@ -55,11 +55,15 @@ exports.createVoiture = async (req, res) => {
 // Obtenir toutes les voitures avec pagination
 exports.getAllVoitures = async (req, res) => {
     try {
-        console.log("🔍 Récupération des voitures - Page:", req.query.page, "Limite:", req.query.limit);
-        const { page = 1, limit = 10 } = req.query;
+        // Convertir les valeurs en nombres
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        console.log("🔍 Récupération des voitures - Page:", page, "Limite:", limit);
+
         const voitures = await Voiture.find()
             .skip((page - 1) * limit)
-            .limit(parseInt(limit));
+            .limit(limit);
 
         console.log("🚗 Voitures récupérées:", voitures.length);
         res.status(200).json(voitures);
@@ -69,6 +73,7 @@ exports.getAllVoitures = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la récupération des voitures.", error: error.message });
     }
 };
+
 
 // Obtenir une voiture par ID
 exports.getVoitureById = async (req, res) => {
