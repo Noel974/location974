@@ -1,63 +1,64 @@
 const Client = require('../models/Client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid'); // pour générer idClient
 
+//client
+exports.registerClient = async (req, res) => {
+  try {
+      const { nom, prenom, email, motDePasse} = req.body;
 
-// Obtenir le profil du client (accessible au client lui-même)
-exports.getClientProfile = async (req, res) => {
-    try {
-        const client = await Client.findById(req.user.id);
-        if (!client) {
-            return res.status(404).json({ message: "Client non trouvé." });
-        }
-        res.status(200).json(client);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération du profil.", error: error.message });
-    }
+      if (!nom || !prenom || !email || !motDePasse) {
+          return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
+      }
+
+      // Vérifier si l'email est déjà utilisé
+      const existingClient = await Client.findOne({ email });
+      if (existingClient) {
+          return res.status(400).json({ message: "Cet email est déjà utilisé." });
+      }
+
+      // Hacher le mot de passe
+      const hashedPassword = await bcrypt.hash(motDePasse, 10);
+
+      // Créer le client
+      const client = await Client.create({
+          nom,
+          prenom,
+          email,
+          motDePasse: hashedPassword,
+      });
+
+      res.status(201).json({ message: "Inscription réussie !", client });
+  } catch (error) {
+      res.status(500).json({ message: "Erreur lors de l'inscription.", error: error.message });
+  }
 };
 
-// Mettre à jour le profil du client (accessible au client lui-même)
-exports.updateClientProfile = async (req, res) => {
-    try {
-        const updatedData = req.body;
+exports.loginClient = async (req, res) => {
+  try {
+      const { email, motDePasse } = req.body;
 
-        if (updatedData.email || updatedData.motDePasse) {
-            return res.status(400).json({ message: "Modification de l'email ou du mot de passe non autorisée ici." });
-        }
+      if (!email || !motDePasse) {
+          return res.status(400).json({ message: "Email et mot de passe requis." });
+      }
 
-        const client = await Client.findByIdAndUpdate(req.user.id, updatedData, { new: true });
-        if (!client) {
-            return res.status(404).json({ message: "Client non trouvé." });
-        }
-        res.status(200).json(client);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la mise à jour du profil.", error: error.message });
-    }
-};
+      // Vérifier si le client existe
+      const client = await Client.findOne({ email });
+      if (!client) {
+          return res.status(401).json({ message: "Identifiants invalides." });
+      }
 
-// Obtenir l'historique des locations d'un client
-exports.getClientHistory = async (req, res) => {
-    try {
-        const client = await Client.findById(req.user.id).populate('historiqueLocations');
-        if (!client) {
-            return res.status(404).json({ message: "Client non trouvé." });
-        }
-        res.status(200).json(client.historiqueLocations);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération de l'historique.", error: error.message });
-    }
-};
+      // Vérifier le mot de passe
+      const isMatch = await bcrypt.compare(motDePasse, client.motDePasse);
+      if (!isMatch) {
+          return res.status(401).json({ message: "Mot de passe incorrect." });
+      }
 
-// Supprimer un client (admin uniquement)
-exports.deleteClient = async (req, res) => {
-    try {
-        const client = await Client.findByIdAndDelete(req.params.id);
-        if (!client) {
-            return res.status(404).json({ message: "Client non trouvé." });
-        }
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la suppression du client.", error: error.message });
-    }
+      // Générer un token JWT
+      const token = jwt.sign({ id: client._id, role: 'client' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+      res.status(200).json({ message: "Connexion réussie !", token });
+  } catch (error) {
+      res.status(500).json({ message: "Erreur lors de la connexion.", error: error.message });
+  }
 };
