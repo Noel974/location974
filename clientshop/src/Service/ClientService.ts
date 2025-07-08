@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'https://location974.onrender.com/api/'; // Vérifie l'URL backend
+const API_URL = 'https://location974.onrender.com/api/clients/'; // Vérifie l'URL backend
 
 // Inscription du client
 export const registerClient = async (clientData: any) => {
   try {
-    const response = await axios.post(`${API_URL}/clients/register`, clientData);
+    const response = await axios.post(`${API_URL}client/register`, clientData);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Erreur inconnue lors de l'inscription." };
@@ -15,7 +15,7 @@ export const registerClient = async (clientData: any) => {
 // Connexion du client
 export const loginClient = async (credentials: any) => {
   try {
-    const response = await axios.post(`${API_URL}/clients/login`, credentials);
+    const response = await axios.post(`${API_URL}client/login`, credentials);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Erreur inconnue lors de la connexion." };
