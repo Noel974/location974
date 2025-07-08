@@ -9,8 +9,8 @@ const clientSchema = new mongoose.Schema({
   telephone: { type: String, trim: true },
   adresse: { type: String, trim: true },
   verificationIdentite: {
-    documentType: { type: String, enum: ['CNI', 'passport', 'permis de conduire'], required: true },
-    documentUrl: { type: String, required: true }, // URL du document d'identité
+    documentType: { type: String, enum: ['CNI', 'passport', 'permis de conduire'], required: false },
+    documentUrl: { type: String, required: false }, // URL du document d'identité
     statut: { type: String, enum: ['en attente', 'validé', 'rejeté'], default: 'en attente' }
   },
   historiqueLocations: [{
