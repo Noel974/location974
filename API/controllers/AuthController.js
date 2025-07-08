@@ -65,7 +65,7 @@ exports.loginEmploye = async (req, res) => {
 //client
 exports.registerClient = async (req, res) => {
   try {
-      const { nom, prenom, email, motDePasse, telephone, adresse } = req.body;
+      const { nom, prenom, email, motDePasse} = req.body;
 
       if (!nom || !prenom || !email || !motDePasse) {
           return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
@@ -86,8 +86,6 @@ exports.registerClient = async (req, res) => {
           prenom,
           email,
           motDePasse: hashedPassword,
-          telephone,
-          adresse
       });
 
       res.status(201).json({ message: "Inscription réussie !", client });

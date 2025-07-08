@@ -9,6 +9,9 @@ import {
   Navbar,
 } from 'react-bootstrap';
 
+import { registerClient, loginClient } from '../Service/ClientService'; // Chemin selon ton projet
+
+
 const CustomNavbar: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -24,41 +27,62 @@ const CustomNavbar: React.FC = () => {
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
   const [registerError, setRegisterError] = useState('');
 
-  const handleLogin = () => {
-    // Ici, tu peux ajouter une vraie validation / API call
-    if (loginEmail && loginPassword) {
-      setIsAuthenticated(true);
-      setShowModal(false);
+const handleLogin = async () => {
+  if (!loginEmail || !loginPassword) {
+    alert('Veuillez remplir tous les champs pour vous connecter.');
+    return;
+  }
 
-      // Réinitialiser formulaire
-      setLoginEmail('');
-      setLoginPassword('');
-    } else {
-      alert('Veuillez remplir tous les champs pour vous connecter.');
-    }
-  };
+  try {
+    const response = await loginClient({
+      email: loginEmail,
+      motDePasse: loginPassword,
+    });
 
-  const handleRegister = () => {
-    // Validation simple pour la démo
-    if (!registerEmail || !registerPassword || !registerConfirmPassword) {
-      setRegisterError('Tous les champs sont obligatoires.');
-      return;
-    }
-    if (registerPassword !== registerConfirmPassword) {
-      setRegisterError('Les mots de passe ne correspondent pas.');
-      return;
-    }
+    localStorage.setItem('token', response.token);
+    setIsAuthenticated(true);
+    setShowModal(false);
 
-    // Ici, tu peux faire un appel API pour enregistrer l’utilisateur
+    // Reset du formulaire
+    setLoginEmail('');
+    setLoginPassword('');
+  } catch (error: any) {
+    alert(error.message || 'Échec de la connexion.');
+  }
+};
+
+
+const handleRegister = async () => {
+  if (!registerEmail || !registerPassword || !registerConfirmPassword) {
+    setRegisterError('Tous les champs sont obligatoires.');
+    return;
+  }
+  if (registerPassword !== registerConfirmPassword) {
+    setRegisterError('Les mots de passe ne correspondent pas.');
+    return;
+  }
+
+  try {
+    await registerClient({
+      email: registerEmail,
+      motDePasse: registerPassword,
+      nom: 'John',       // 👈 à remplacer par des vrais champs si tu les ajoutes
+      prenom: 'Doe',     // idem
+    });
+
     setIsAuthenticated(true);
     setShowModal(false);
     setRegisterError('');
 
-    // Réinitialiser formulaire
+    // Reset
     setRegisterEmail('');
     setRegisterPassword('');
     setRegisterConfirmPassword('');
-  };
+  } catch (error: any) {
+    setRegisterError(error.message || 'Échec de l’inscription.');
+  }
+};
+
 
   const toggleForm = () => {
     setIsRegistering(!isRegistering);

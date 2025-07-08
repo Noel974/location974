@@ -37,7 +37,7 @@ export const updateVoiture = async (id: string, data: FormData) => {
   console.log("✏️ Mise à jour de la voiture ID:", id);
 
   try {
-    const response = await axios.put(`http://localhost:3100/api/voitures/${id}`, data, {
+    const response = await axios.put(`https://location974.onrender.com/api/voitures/${id}`, data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
