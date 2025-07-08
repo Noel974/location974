@@ -8,6 +8,7 @@ import Voiture from '../pages/Voiture';
 import Moto from '../pages/Moto';
 import VoitureDetailPage from '../pages/VoitureDetailsP';
 import MotoDetailPage from '../pages/MotoDetailsP';
+import ProfilPage from '../pages/Profil';
 
 const Index: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const Index: React.FC = () => {
       <Route path="/ConditionsPage/" element={<ConditionsPage />} />
       <Route path="/MentionsLegales/" element={<MentionsLegales/>}/>
       <Route path="/FAQPage" element={<FAQPage/>}/>
+      <Route path ="/Profil/:id" element={<ProfilPage/>}/>
     </Routes>
   );
 };

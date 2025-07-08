@@ -22,6 +22,19 @@ export const loginClient = async (credentials: any) => {
   }
 };
 
+export const getClientById = async (clientId: string, token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/clients/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data || { message: "Erreur lors de la récupération du profil." };
+  }
+};
+
 // Mise à jour du profil
 export const updateClientProfile = async (clientId, updatedData, token) => {
   try {

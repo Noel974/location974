@@ -40,6 +40,7 @@ const handleLogin = async () => {
     });
 
     localStorage.setItem('token', response.token);
+    localStorage.setItem('clientId', response.client._id);
     setIsAuthenticated(true);
     setShowModal(false);
 
@@ -113,7 +114,7 @@ const handleRegister = async () => {
                     Mon Compte
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item href="#profil">Profil</Dropdown.Item>
+                    <Dropdown.Item href="/Profil">Profil</Dropdown.Item>
                     <Dropdown.Item href="#histoire">Histoire</Dropdown.Item>
                     <Dropdown.Item href="#sinistre">Sinistre</Dropdown.Item>
                     <Dropdown.Item href="#penalite">Pénalité</Dropdown.Item>

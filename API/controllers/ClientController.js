@@ -67,3 +67,19 @@ exports.loginClient = async (req, res) => {
       res.status(500).json({ message: "Erreur lors de la connexion.", error: error.message });
   }
 };
+
+exports.getClientById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const client = await Client.findById(id).select('-motDePasse'); // on masque le mot de passe
+    if (!client) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    res.status(200).json(client);
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du client :", error);
+    res.status(500).json({ message: "Erreur lors de la récupération du client.", error: error.message });
+  }
+};
