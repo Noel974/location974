@@ -5,34 +5,39 @@ const jwt = require('jsonwebtoken');
 //client
 exports.registerClient = async (req, res) => {
   try {
-      const { nom, prenom, email, motDePasse} = req.body;
+    console.log('➡️ Requête reçue sur /client/register');
+    console.log('Corps reçu :', req.body);
 
-      if (!nom || !prenom || !email || !motDePasse) {
-          return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
-      }
+    const { nom, prenom, email, motDePasse } = req.body;
 
-      // Vérifier si l'email est déjà utilisé
-      const existingClient = await Client.findOne({ email });
-      if (existingClient) {
-          return res.status(400).json({ message: "Cet email est déjà utilisé." });
-      }
+    if (!nom || !prenom || !email || !motDePasse) {
+      console.log('❌ Champs manquants');
+      return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
+    }
 
-      // Hacher le mot de passe
-      const hashedPassword = await bcrypt.hash(motDePasse, 10);
+    const existingClient = await Client.findOne({ email });
+    if (existingClient) {
+      console.log('⚠️ Email déjà utilisé');
+      return res.status(400).json({ message: "Cet email est déjà utilisé." });
+    }
 
-      // Créer le client
-      const client = await Client.create({
-          nom,
-          prenom,
-          email,
-          motDePasse: hashedPassword,
-      });
+    const hashedPassword = await bcrypt.hash(motDePasse, 10);
 
-      res.status(201).json({ message: "Inscription réussie !", client });
+    const client = await Client.create({
+      nom,
+      prenom,
+      email,
+      motDePasse: hashedPassword,
+    });
+
+    console.log('✅ Client créé avec succès :', client._id);
+    res.status(201).json({ message: "Inscription réussie !", client });
   } catch (error) {
-      res.status(500).json({ message: "Erreur lors de l'inscription.", error: error.message });
+    console.error('🔥 Erreur dans registerClient :', error);
+    res.status(500).json({ message: "Erreur lors de l'inscription.", error: error.message });
   }
 };
+
 
 exports.loginClient = async (req, res) => {
   try {
