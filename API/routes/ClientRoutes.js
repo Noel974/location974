@@ -4,7 +4,7 @@ const clientController = require('../controllers/ClientController');
 
 router.post('/client/register', clientController.registerClient);
 router.post('/client/login', clientController.loginClient);
-router.get('/client/:id', clientController.getClientById);
+router.get('/:id', clientController.getClientById);
 
 
 module.exports = router;

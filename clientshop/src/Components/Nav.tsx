@@ -40,7 +40,7 @@ const handleLogin = async () => {
     });
 
     localStorage.setItem('token', response.token);
-    localStorage.setItem('clientId', response.client._id);
+    localStorage.setItem('id', response.client._id);
     setIsAuthenticated(true);
     setShowModal(false);
 
