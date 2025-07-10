@@ -1,3 +1,28 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+h1, h5 {
+  letter-spacing: 0.5px;
+}
+
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+
 .colored-row {
   border: 3px solid #0d6efd; /* Couleur de la bordure */
   border-radius: 12px;
@@ -19,7 +44,7 @@ padding-left: 250px;
 }
 
 .carousel-frame {
-  width: 80%; /* ajuste selon le rendu désiré */
+  width: 50%; /* ajuste selon le rendu désiré */
   border: 3px solid #ccc;
   border-radius: 12px;
   overflow: hidden;
@@ -35,4 +60,20 @@ p{color:black}
 
 .image-spaced {
   margin-right: 16px; /* ou la valeur que tu veux */
+}
+
+
+.voiture-detail-page {
+  background: #f9f9f9;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.voiture-detail-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 30px;
+  border-radius: 8px;
 }

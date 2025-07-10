@@ -10,21 +10,28 @@ import VoitureDetailPage from '../pages/VoitureDetailsP';
 import MotoDetailPage from '../pages/MotoDetailsP';
 import ProfilPage from '../pages/Profil';
 
-const Index: React.FC = () => {
-  return (
-    <Routes>
-      {/* Route vers la page d'accueil */}
-      <Route path="/" element={<Home />} />
-      <Route path="/Voiture" element={<Voiture/>}/>
-      <Route path="/Moto" element={<Moto/>}/>
-      <Route path="/Moto/:id" element={<MotoDetailPage/>}/>
-      <Route path="/voitures/:id" element={<VoitureDetailPage />} />
-      <Route path="/ConditionsPage/" element={<ConditionsPage />} />
-      <Route path="/MentionsLegales/" element={<MentionsLegales/>}/>
-      <Route path="/FAQPage" element={<FAQPage/>}/>
-      <Route path ="/Profil/:id" element={<ProfilPage/>}/>
-    </Routes>
-  );
-};
 
-export default Index;
+
+// src/router.tsx
+import { createBrowserRouter } from 'react-router-dom';
+import Layout from '../layouts/MainLayout';
+
+
+
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <Home /> },
+      {path: 'ConditionsPage', element:<ConditionsPage/>},
+      {path: 'MentionsLegales',element:<MentionsLegales/>},
+      {path: 'FAQPage',element:<FAQPage/>},
+      { path: 'Voiture', element: <Voiture /> },
+      { path: 'Voitures/:id', element: <VoitureDetailPage /> },
+      { path: 'Moto', element: <Moto /> },
+      {path:'Moto/:id',element:<MotoDetailPage/>},
+    ],
+  },
+]);
+

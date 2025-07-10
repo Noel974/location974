@@ -1,51 +1,86 @@
 import axios from 'axios';
 
-const API_URL = 'https://location974.onrender.com/api/clients/'; // Vérifie l'URL backend
+// URL de base de l’API
+const API_URL = 'https://location974.onrender.com/api/client/';
+
+// --------------------
+// Interfaces TypeScript
+// --------------------
+
+export interface ClientRegisterData {
+  nom: string;
+  prenom: string;
+  email: string;
+  motDePasse: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  motDePasse: string;
+}
+
+export interface ClientProfile {
+  _id: string;
+  idClient?: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  telephone?: string;
+  adresse?: string;
+  dateInscription: string;
+  systemeFidelite: {
+    points: number;
+    niveau: 'Bronze' | 'Argent' | 'Or' | 'Platine';
+  };
+  statutCompte: 'actif' | 'suspendu';
+  // tu peux ajouter d'autres champs selon ton schéma MongoDB
+}
+
+// --------------------
+// Services
+// --------------------
 
 // Inscription du client
-export const registerClient = async (clientData: any) => {
+export const registerClient = async (clientData: ClientRegisterData): Promise<ClientProfile> => {
   try {
-    const response = await axios.post(`${API_URL}client/register`, clientData);
+    const response = await axios.post(`${API_URL}/register`, clientData);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     throw error.response?.data || { message: "Erreur inconnue lors de l'inscription." };
   }
 };
 
 // Connexion du client
-export const loginClient = async (credentials: any) => {
+export const loginClient = async (
+  credentials: LoginCredentials
+): Promise<{ client: ClientProfile; token: string }>=>{
   try {
-    const response = await axios.post(`${API_URL}client/login`, credentials);
-    return response.data;
-  } catch (error) {
+    const response = await axios.post(`${API_URL}/login`, credentials);
+
+    // Stocke le token et l'ID du client après connexion
+const { token, client } = response.data;
+localStorage.setItem('clientId', client.id);
+localStorage.setItem('token', token);
+
+return { token, client };
+
+  } catch (error: any) {
     throw error.response?.data || { message: "Erreur inconnue lors de la connexion." };
   }
 };
 
-export const getClientById = async (id: string, token: string) => {
+
+export const getClientProfile = async (): Promise<ClientProfile> => {
   try {
-    const response = await axios.get(`${API_URL}/clients/${id}`, {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${API_URL}/profile`, {
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        Authorization: `Bearer ${token}`
+      }
     });
-    return response.data;
+    return response.data.client;
   } catch (error: any) {
-    throw error.response?.data || { message: "Erreur lors de la récupération du profil." };
+    throw error.response?.data || { message: "Erreur lors de la récupération du profil client." };
   }
 };
 
-
-// Mise à jour du profil
-export const updateClientProfile = async (clientId, updatedData, token) => {
-  try {
-    const response = await axios.put(`${API_URL}/${clientId}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { message: "Erreur lors de la mise à jour du profil." };
-  }
-};

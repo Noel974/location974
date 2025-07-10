@@ -1,15 +1,24 @@
-const Client = require('../models/Client');
+const jwt = require('jsonwebtoken');
 
-module.exports = async (req, res, next) => {
-    try {
-        const client = await Client.findById(req.user.id); // Supposant que l'ID utilisateur est dans `req.user`
+exports.verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-        if (!client) {
-            return res.status(403).json({ message: "Accès refusé. Seuls les clients peuvent effectuer cette action." });
-        }
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Token manquant ou invalide.' });
+  }
 
-        next(); // Autorise la requête si l’utilisateur est bien un client
-    } catch (error) {
-        res.status(500).json({ message: "Erreur de vérification des permissions.", error: error.message });
-    }
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // On récupère { id, role }
+    next();
+} catch (err) {
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({ message: 'Token expiré.' });
+  }
+  res.status(403).json({ message: 'Token invalide.' });
+}
+
 };
+

@@ -47,7 +47,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get("http://localhost:3100/api/dashboard"); // API fictive
+        const res = await axios.get("https://location974.onrender.com/api/dashboard"); // API fictive
         setChiffreAffaire(res.data.chiffreAffaire);
         setVoitures({ available: res.data.voituresDispo, rented: res.data.voituresLouees });
         setMotos({ available: res.data.motosDispo, rented: res.data.motosLouees });

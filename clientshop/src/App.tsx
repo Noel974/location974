@@ -1,22 +1,12 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+// src/main.tsx
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import './App.css';
-import Index from './routes/Index';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes/';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Footer from './Components/Footer';
-import CustomNavbar from './Components/Nav';
-
-const App: React.FC = () => {
-    return (
-            <><BrowserRouter>
-            <CustomNavbar />
-            <Index/>
-            <Footer/>
-            </BrowserRouter>
-            </>
-
-    );
-};
-
-export default App;
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);

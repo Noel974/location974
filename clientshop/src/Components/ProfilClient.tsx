@@ -7,22 +7,21 @@ const ProfilClient: React.FC = () => {
   const [erreur, setErreur] = useState('');
 
   useEffect(() => {
-    const fetchClient = async () => {
+    const fetchData = async () => {
       try {
-        const clientId = localStorage.getItem('clientId'); // à enregistrer après login
-        const token = localStorage.getItem('token');
-        if (!clientId || !token) return;
-
-        const data = await getClientById(clientId, token);
+        setLoading(true);
+        const id = localStorage.getItem('clientId');
+        if (!id) throw new Error("Identifiant du client introuvable.");
+        
+        const data = await getClientById(id);
         setClient(data);
       } catch (err: any) {
-        setErreur(err.message || 'Erreur de chargement du profil.');
+        setErreur(err.message || 'Erreur de chargement du profil');
       } finally {
         setLoading(false);
       }
     };
-
-    fetchClient();
+    fetchData();
   }, []);
 
   if (loading) return <div>Chargement du profil...</div>;

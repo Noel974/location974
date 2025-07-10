@@ -1,232 +1,66 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Container,
-  Dropdown,
-  Form,
-  Modal,
-  Nav,
-  Navbar,
-} from 'react-bootstrap';
+// src/components/Navbar.tsx
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import { registerClient, loginClient } from '../Service/ClientService'; // Chemin selon ton projet
-
-
-const CustomNavbar: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false); // Login ou inscription
-
-  // Etats pour formulaire login
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-
-  // Etats pour formulaire inscription
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
-  const [registerError, setRegisterError] = useState('');
-
-const handleLogin = async () => {
-  if (!loginEmail || !loginPassword) {
-    alert('Veuillez remplir tous les champs pour vous connecter.');
-    return;
-  }
-
-  try {
-    const response = await loginClient({
-      email: loginEmail,
-      motDePasse: loginPassword,
-    });
-
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('id', response.client._id);
-    setIsAuthenticated(true);
-    setShowModal(false);
-
-    // Reset du formulaire
-    setLoginEmail('');
-    setLoginPassword('');
-  } catch (error: any) {
-    alert(error.message || 'Échec de la connexion.');
-  }
-};
-
-
-const handleRegister = async () => {
-  if (!registerEmail || !registerPassword || !registerConfirmPassword) {
-    setRegisterError('Tous les champs sont obligatoires.');
-    return;
-  }
-  if (registerPassword !== registerConfirmPassword) {
-    setRegisterError('Les mots de passe ne correspondent pas.');
-    return;
-  }
-
-  try {
-    await registerClient({
-      email: registerEmail,
-      motDePasse: registerPassword,
-      nom: 'John',       // 👈 à remplacer par des vrais champs si tu les ajoutes
-      prenom: 'Doe',     // idem
-    });
-
-    setIsAuthenticated(true);
-    setShowModal(false);
-    setRegisterError('');
-
-    // Reset
-    setRegisterEmail('');
-    setRegisterPassword('');
-    setRegisterConfirmPassword('');
-  } catch (error: any) {
-    setRegisterError(error.message || 'Échec de l’inscription.');
-  }
-};
-
-
-  const toggleForm = () => {
-    setIsRegistering(!isRegistering);
-    setRegisterError('');
-  };
-
+const Navbar: React.FC = () => {
   return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="/">MonSite</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/Voiture">Voiture</Nav.Link>
-              <Nav.Link href="/Moto">Moto</Nav.Link>
-            </Nav>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">Location+</Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-            <Nav className="ms-auto">
-              {!isAuthenticated ? (
-                <Button variant="primary" onClick={() => setShowModal(true)}>
-                  Connectez-vous
-                </Button>
-              ) : (
-                <Dropdown align="end">
-                  <Dropdown.Toggle variant="success" id="dropdown-user">
-                    Mon Compte
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="/Profil">Profil</Dropdown.Item>
-                    <Dropdown.Item href="#histoire">Histoire</Dropdown.Item>
-                    <Dropdown.Item href="#sinistre">Sinistre</Dropdown.Item>
-                    <Dropdown.Item href="#penalite">Pénalité</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => setIsAuthenticated(false)}>
-                      Déconnexion
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+        <div className="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">Accueil</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/voiture">Voiture</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/moto">Moto</Link>
+            </li>
 
-      {/* Modal de Connexion / Inscription */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{isRegistering ? 'Inscription' : 'Connexion'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {!isRegistering ? (
-            <Form>
-              <Form.Group className="mb-3" controlId="loginEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Entrez votre email"
-                  value={loginEmail}
-                  onChange={e => setLoginEmail(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="loginPassword">
-                <Form.Label>Mot de passe</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Mot de passe"
-                  value={loginPassword}
-                  onChange={e => setLoginPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Button variant="primary" onClick={handleLogin}>
-                Se connecter
-              </Button>
-
-              <div className="mt-3">
-                <small>
-                  Pas encore de compte ?{' '}
-                  <Button variant="link" onClick={toggleForm} style={{ padding: 0 }}>
-                    Inscrivez-vous ici
-                  </Button>
-                </small>
-              </div>
-            </Form>
-          ) : (
-            <Form>
-              {registerError && (
-                <div className="alert alert-danger" role="alert">
-                  {registerError}
-                </div>
-              )}
-
-              <Form.Group className="mb-3" controlId="registerEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Entrez votre email"
-                  value={registerEmail}
-                  onChange={e => setRegisterEmail(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="registerPassword">
-                <Form.Label>Mot de passe</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Mot de passe"
-                  value={registerPassword}
-                  onChange={e => setRegisterPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="registerConfirmPassword">
-                <Form.Label>Confirmer le mot de passe</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Confirmer le mot de passe"
-                  value={registerConfirmPassword}
-                  onChange={e => setRegisterConfirmPassword(e.target.value)}
-                />
-              </Form.Group>
-
-              <Button variant="success" onClick={handleRegister}>
-                S'inscrire
-              </Button>
-
-              <div className="mt-3">
-                <small>
-                  Déjà un compte ?{' '}
-                  <Button variant="link" onClick={toggleForm} style={{ padding: 0 }}>
-                    Connectez-vous ici
-                  </Button>
-                </small>
-              </div>
-            </Form>
-          )}
-        </Modal.Body>
-      </Modal>
-    </>
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Client
+              </a>
+              <ul className="dropdown-menu">
+                <li>
+                  <Link className="dropdown-item" to="/profil">Profil</Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/history">Historique</Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/sinistre">Sinistre</Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/penalite">Pénalité</Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   );
 };
 
-export default CustomNavbar;
+export default Navbar;

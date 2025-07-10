@@ -8,7 +8,7 @@ exports.registerClient = async (req, res) => {
     console.log('➡️ Requête reçue sur /client/register');
     console.log('Corps reçu :', req.body);
 
-    const { nom, prenom, email, motDePasse } = req.body;
+   const { nom, prenom, email, motDePasse } = req.body;
 
     if (!nom || !prenom || !email || !motDePasse) {
       console.log('❌ Champs manquants');
@@ -31,7 +31,17 @@ exports.registerClient = async (req, res) => {
     });
 
     console.log('✅ Client créé avec succès :', client._id);
-    res.status(201).json({ message: "Inscription réussie !", client });
+    
+    res.status(201).json({
+  message: "Inscription réussie !",
+  client: {
+    id: client._id,
+    nom: client.nom,
+    prenom: client.prenom,
+    email: client.email
+  }
+});
+
   } catch (error) {
     console.error('🔥 Erreur dans registerClient :', error);
     res.status(500).json({ message: "Erreur lors de l'inscription.", error: error.message });
@@ -62,24 +72,41 @@ exports.loginClient = async (req, res) => {
       // Générer un token JWT
       const token = jwt.sign({ id: client._id, role: 'client' }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-      res.status(200).json({ message: "Connexion réussie !", token });
+      res.status(200).json({
+  message: "Connexion réussie !",
+  token,
+  client: {
+    id: client._id,
+    nom: client.nom,
+    prenom: client.prenom,
+    email: client.email,
+  }
+});
+
   } catch (error) {
       res.status(500).json({ message: "Erreur lors de la connexion.", error: error.message });
   }
 };
 
-exports.getClientById = async (req, res) => {
+exports.getClientProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const client = await Client.findById(req.user.id).select('-motDePasse');
 
-    const client = await Client.findById(id).select('-motDePasse'); // on masque le mot de passe
     if (!client) {
       return res.status(404).json({ message: "Client non trouvé." });
     }
 
-    res.status(200).json(client);
+   res.status(200).json({
+  client: {
+    id: client._id,
+    nom: client.nom,
+    prenom: client.prenom,
+    email: client.email
+  }
+});
+
   } catch (error) {
-    console.error("❌ Erreur lors de la récupération du client :", error);
-    res.status(500).json({ message: "Erreur lors de la récupération du client.", error: error.message });
+    res.status(500).json({ message: "Erreur serveur.", error: error.message });
   }
 };
+
