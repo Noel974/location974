@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getClientById } from '../Service/ClientService';
+import { getClientProfile } from '../Service/ClientService';
 
 const ProfilClient: React.FC = () => {
   const [client, setClient] = useState<any>(null);
@@ -13,7 +13,7 @@ const ProfilClient: React.FC = () => {
         const id = localStorage.getItem('clientId');
         if (!id) throw new Error("Identifiant du client introuvable.");
         
-        const data = await getClientById(id);
+        const data = await getClientProfile;
         setClient(data);
       } catch (err: any) {
         setErreur(err.message || 'Erreur de chargement du profil');

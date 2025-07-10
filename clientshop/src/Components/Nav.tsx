@@ -1,66 +1,38 @@
-// src/components/Navbar.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 
-const Navbar: React.FC = () => {
+const MyNavbar: React.FC = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">Location+</Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+    <Navbar expand="lg" bg="dark" variant="dark">
+      <Container>
+        {/* Logo à gauche */}
+        <Navbar.Brand href="#">MonEntreprise</Navbar.Brand>
 
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Accueil</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/voiture">Voiture</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/moto">Moto</Link>
-            </li>
+        {/* Toggler pour mobile */}
+        <Navbar.Toggle aria-controls="main-navbar" />
 
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Client
-              </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <Link className="dropdown-item" to="/profil">Profil</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/history">Historique</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/sinistre">Sinistre</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/penalite">Pénalité</Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+        <Navbar.Collapse id="main-navbar">
+          {/* Navigation au centre */}
+          <Nav className="mx-auto">
+            <Nav.Link href="#accueil">Accueil</Nav.Link>
+            <Nav.Link href="#services">Services</Nav.Link>
+            <Nav.Link href="#projets">Projets</Nav.Link>
+            <Nav.Link href="#contact">Contact</Nav.Link>
+          </Nav>
+
+          {/* Dropdown à droite */}
+          <Nav>
+            <NavDropdown title="Mon Compte" id="account-dropdown" align="end">
+              <NavDropdown.Item href="#profil">Profil</NavDropdown.Item>
+              <NavDropdown.Item href="#parametres">Paramètres</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#deconnexion">Déconnexion</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default MyNavbar;
