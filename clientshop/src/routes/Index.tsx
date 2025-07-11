@@ -1,16 +1,14 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom'; // Assurez-vous que `react-router-dom` est installé
-import ConditionsPage from '../pages/Condition'; // Vérifiez que ce chemin est correct
+import AuthPage from '../pages/Auth';
+import ConditionsPage from '../pages/Condition';
+import ConfirPage from '../pages/Confir';
 import FAQPage from '../pages/FAQ';
-import Home from '../pages/Home'; // Vérifiez que ce chemin est correct
+import Home from '../pages/Home';
 import MentionsLegales from '../pages/Mention';
-import Voiture from '../pages/Voiture';
-import AuthPage from'../pages/Auth';
 import Moto from '../pages/Moto';
-import VoitureDetailPage from '../pages/VoitureDetailsP';
 import MotoDetailPage from '../pages/MotoDetailsP';
 import ProfilPage from '../pages/Profil';
-import ConfirPage from '../pages/Confir';
+import Voiture from '../pages/Voiture';
+import VoitureDetailPage from '../pages/VoitureDetailsP';
 
 
 
