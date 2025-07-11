@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
-import { createReservation } from '../Service/Reservation';
 import { useNavigate } from "react-router-dom";
+import { createReservation } from '../Service/Reservation';
 
 interface VoitureDetailProps {
   voiture: any;
   onClose: () => void;
 }
-const navigate = useNavigate();
+
 const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
   const [imageActive, setImageActive] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (voiture && voiture.imageUrls?.length > 0) {

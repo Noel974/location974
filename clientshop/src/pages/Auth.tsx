@@ -17,14 +17,18 @@ const AuthPage: React.FC = () => {
     motDePasse: '',
   });
 
-  const handleRegister = async () => {
-    try {
-      const profile = await registerClient(registerData);
-      alert(`Bienvenue ${profile.prenom} !`);
-    } catch (err: any) {
-      alert(err.message || "Erreur pendant l'inscription.");
-    }
-  };
+const handleRegister = async () => {
+  try {
+    console.log("📤 Données envoyées pour inscription :", registerData);
+    const res = await registerClient(registerData);
+    console.log("✅ Réponse de l'API :", res);
+    alert("Inscription réussie !");
+    setIsRegisterMode(false); // bascule vers la connexion après inscription
+  } catch (err: any) {
+    console.error("❌ Erreur lors de l'inscription :", err);
+    alert(err.message || "Erreur inconnue lors de l'inscription.");
+  }
+};
 
   const handleLogin = async () => {
     try {

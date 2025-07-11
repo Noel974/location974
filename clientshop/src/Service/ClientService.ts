@@ -43,7 +43,7 @@ export interface ClientProfile {
 // Inscription du client
 export const registerClient = async (clientData: ClientRegisterData): Promise<ClientProfile> => {
   try {
-    const response = await axios.post(`${API_URL}/register`, clientData);
+    const response = await axios.post(`${API_URL}register`, clientData);
     return response.data;
   } catch (error: any) {
     throw error.response?.data || { message: "Erreur inconnue lors de l'inscription." };

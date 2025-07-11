@@ -1,6 +1,7 @@
 const Client = require('../models/Client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+import { v4 as uuidv4 } from 'uuid';
 
 //client
 exports.registerClient = async (req, res) => {
@@ -8,7 +9,7 @@ exports.registerClient = async (req, res) => {
     console.log('➡️ Requête reçue sur /client/register');
     console.log('Corps reçu :', req.body);
 
-   const { nom, prenom, email, motDePasse } = req.body;
+    const { nom, prenom, email, motDePasse } = req.body;
 
     if (!nom || !prenom || !email || !motDePasse) {
       console.log('❌ Champs manquants');
@@ -23,30 +24,40 @@ exports.registerClient = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(motDePasse, 10);
 
-    const client = await Client.create({
-      nom,
-      prenom,
-      email,
-      motDePasse: hashedPassword,
-    });
+    let client;
+    try {
+      client = await Client.create({
+         uuid: uuidv4(),
+        nom,
+        prenom,
+        email,
+        motDePasse: hashedPassword,
+      });
+    } catch (err) {
+      console.error('❌ Erreur lors de la création du client :', err.message);
+      return res.status(500).json({ message: "Erreur lors de la création du client.", error: err.message });
+    }
 
     console.log('✅ Client créé avec succès :', client._id);
-    
-    res.status(201).json({
+
+res.status(201).json({
   message: "Inscription réussie !",
   client: {
     id: client._id,
+    uuid: client.uuid,
     nom: client.nom,
     prenom: client.prenom,
     email: client.email
   }
 });
 
+
   } catch (error) {
-    console.error('🔥 Erreur dans registerClient :', error);
+    console.error('🔥 Erreur générale dans registerClient :', error);
     res.status(500).json({ message: "Erreur lors de l'inscription.", error: error.message });
   }
 };
+
 
 
 exports.loginClient = async (req, res) => {
