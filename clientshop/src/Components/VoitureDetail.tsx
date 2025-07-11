@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
 
 interface VoitureDetailProps {
   voiture: any;
@@ -17,90 +18,112 @@ const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
     }
   }, [voiture]);
 
-  if (!voiture) return <p>Chargement des données voiture...</p>;
-
   const handleReservationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert(`Réservé du ${startDate} au ${endDate} pour la ${voiture.marque} ${voiture.modele}`);
-    // Ici tu pourrais appeler une API ou passer les données au parent
     setShowForm(false);
   };
 
+  if (!voiture) return <p>Chargement des données voiture...</p>;
+
   return (
-    <div className="voiture-detail" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <button onClick={onClose} className="btn-retour">← Retour</button>
+    <Container className="my-5">
+      <Button variant="secondary" onClick={onClose} className="mb-3">
+        ← Retour
+      </Button>
 
-      <h2 style={{ marginBottom: '20px' }}>
-        {voiture.marque} {voiture.modele}
-      </h2>
+      <Card className="shadow-sm">
+        <Card.Body>
+          <Row>
+            {/* Miniatures */}
+            <Col md={2} className="d-flex flex-column gap-2">
+              {voiture.imageUrls?.map((url: string, idx: number) => (
+                <Image
+                  key={idx}
+                  src={url}
+                  thumbnail
+                  onMouseEnter={() => setImageActive(url)}
+                  style={{
+                    cursor: "pointer",
+                    border: imageActive === url ? "2px solid #0d6efd" : "1px solid #ccc"
+                  }}
+                />
+              ))}
+            </Col>
 
-      <div className="voiture-article" style={{ display: 'flex', gap: '20px' }}>
-        <div className="voiture-thumbnails" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {voiture.imageUrls?.map((url: string, index: number) => (
-            <img
-              key={index}
-              src={url}
-              alt={`Miniature ${index}`}
-              className="thumbnail"
-              onMouseEnter={() => setImageActive(url)}
-              style={{ width: '80px', height: '60px', cursor: 'pointer', objectFit: 'cover', border: imageActive === url ? '2px solid blue' : '1px solid #ccc' }}
-            />
-          ))}
-        </div>
+            {/* Image principale */}
+            <Col md={10}>
+              <Image
+                src={imageActive || 'https://via.placeholder.com/800x400'}
+                fluid
+                rounded
+                className="mb-4"
+              />
 
-        <div className="voiture-main-image" style={{ flex: 1 }}>
-          {imageActive ? (
-            <img src={imageActive} alt="Image principale" style={{ width: '100%', borderRadius: '8px' }} />
-          ) : (
-            <p>Pas d’image disponible</p>
+              <h2>{voiture.marque} {voiture.modele}</h2>
+              <p><strong>Description :</strong> {voiture.description}</p>
+              <Row>
+                <Col md={6}>
+                  <p><strong>Prix / jour :</strong> {voiture.prixParJour} €</p>
+                  <p><strong>Boîte :</strong> {voiture.boiteVitesse}</p>
+                  <p><strong>Carburant :</strong> {voiture.carburant}</p>
+                </Col>
+                <Col md={6}>
+                  <p><strong>Kilométrage :</strong> {voiture.kilometrage} km</p>
+                  <p><strong>Mise en service :</strong> {new Date(voiture.dateMiseEnService).toLocaleDateString()}</p>
+                </Col>
+              </Row>
+
+              <Button variant="primary" onClick={() => setShowForm(true)} className="mt-3">
+                Réserver cette voiture
+              </Button>
+            </Col>
+          </Row>
+
+          {/* Formulaire de réservation */}
+          {showForm && (
+            <Form onSubmit={handleReservationSubmit} className="mt-4 border-top pt-4">
+              <h4>Réserver maintenant</h4>
+
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="startDate" className="mb-3">
+                    <Form.Label>Date de début</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col md={6}>
+                  <Form.Group controlId="endDate" className="mb-3">
+                    <Form.Label>Date de fin</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <div className="d-flex gap-3">
+                <Button variant="success" type="submit">
+                  Confirmer la réservation
+                </Button>
+                <Button variant="outline-secondary" onClick={() => setShowForm(false)}>
+                  Annuler
+                </Button>
+              </div>
+            </Form>
           )}
-        </div>
-      </div>
-
-      <div style={{ marginTop: '20px' }}>
-        <p><strong>Description:</strong> {voiture.description}</p>
-        <p><strong>Prix/jour:</strong> {voiture.prixParJour}€</p>
-        <p><strong>Boîte:</strong> {voiture.boiteVitesse}</p>
-        <p><strong>Carburant:</strong> {voiture.carburant}</p>
-        <p><strong>Kilométrage:</strong> {voiture.kilometrage} km</p>
-        <p><strong>Mise en service:</strong> {new Date(voiture.dateMiseEnService).toLocaleDateString()}</p>
-
-        <button
-          onClick={() => setShowForm(true)}
-          style={{
-            marginTop: '20px',
-            padding: '10px 20px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Réserver cette voiture
-        </button>
-
-        {showForm && (
-          <form onSubmit={handleReservationSubmit} style={{ marginTop: '20px', border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
-            <h3>Réservation</h3>
-            <div style={{ marginBottom: '10px' }}>
-              <label>Date de début: </label><br />
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <label>Date de fin: </label><br />
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
-            </div>
-            <button type="submit" style={{ backgroundColor: '#28a745', color: '#fff', padding: '8px 16px', border: 'none', borderRadius: '5px' }}>
-              Confirmer la réservation
-            </button>
-            <button type="button" onClick={() => setShowForm(false)} style={{ marginLeft: '10px', padding: '8px 16px' }}>
-              Annuler
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

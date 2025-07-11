@@ -37,7 +37,6 @@ const employeRoutes = require('./routes/EmployeRoutes');
 const clientRoutes = require('./routes/ClientRoutes');
 const voitureRoutes = require('./routes/VoitureRoutes');
 const motoRoutes = require('./routes/MotoRoutes');
-const avisRoutes = require('./routes/AvisRoutes');
 const dashboardRoutes = require('./routes/DashboardRoutes');
 const entretienRoutes = require('./routes/EntretienRoutes');
 
@@ -53,7 +52,6 @@ app.use('/api/employes', employeRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/voitures', voitureRoutes);
 app.use('/api/moto', motoRoutes);
-app.use('/api/avis', avisRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entretien', entretienRoutes);
 

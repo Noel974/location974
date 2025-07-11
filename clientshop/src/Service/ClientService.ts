@@ -73,7 +73,7 @@ return { token, client };
 export const getClientProfile = async (): Promise<ClientProfile> => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/profile`, {
+    const response = await axios.get(`${API_URL}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

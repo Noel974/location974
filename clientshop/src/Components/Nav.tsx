@@ -14,16 +14,15 @@ const MyNavbar: React.FC = () => {
         <Navbar.Collapse id="main-navbar">
           {/* Navigation au centre */}
           <Nav className="mx-auto">
-            <Nav.Link href="#accueil">Accueil</Nav.Link>
-            <Nav.Link href="#services">Services</Nav.Link>
-            <Nav.Link href="#projets">Projets</Nav.Link>
-            <Nav.Link href="#contact">Contact</Nav.Link>
+            <Nav.Link href="/">Accueil</Nav.Link>
+            <Nav.Link href="/Voiture">Voiture</Nav.Link>
+            <Nav.Link href="/Moto">Moto</Nav.Link>
           </Nav>
 
           {/* Dropdown à droite */}
           <Nav>
             <NavDropdown title="Mon Compte" id="account-dropdown" align="end">
-              <NavDropdown.Item href="#profil">Profil</NavDropdown.Item>
+              <NavDropdown.Item href="/Profil">Profil</NavDropdown.Item>
               <NavDropdown.Item href="#parametres">Paramètres</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#deconnexion">Déconnexion</NavDropdown.Item>

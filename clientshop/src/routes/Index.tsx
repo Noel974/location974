@@ -27,6 +27,7 @@ export const router = createBrowserRouter([
       {path: 'ConditionsPage', element:<ConditionsPage/>},
       {path: 'MentionsLegales',element:<MentionsLegales/>},
       {path: 'FAQPage',element:<FAQPage/>},
+      {path: 'Profil',element:<ProfilPage/>},
       { path: 'Voiture', element: <Voiture /> },
       { path: 'Voitures/:id', element: <VoitureDetailPage /> },
       { path: 'Moto', element: <Moto /> },
