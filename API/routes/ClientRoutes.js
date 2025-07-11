@@ -9,5 +9,7 @@ router.get('/client/profile', verifyToken, clientController.getClientProfile);
 router.post('/client/register', clientController.registerClient);
 router.post('/client/login', clientController.loginClient);
 
+router.put('/client/udpdate', verifyToken, clientController.updateClientProfile);
+router.delete('/client/delete', verifyToken, clientController.deleteClientAccount);
 
 module.exports = router;

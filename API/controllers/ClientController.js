@@ -6,26 +6,19 @@ const { v4: uuidv4 } = require('uuid');
 // ✅ Inscription client
 exports.registerClient = async (req, res) => {
   try {
-    console.log('➡️ Requête reçue sur /client/register');
-    console.log('Corps reçu :', req.body);
-
     const { nom, prenom, email, motDePasse } = req.body;
 
-    // Vérification des champs requis
     if (!nom || !prenom || !email || !motDePasse) {
       return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
     }
 
-    // Vérification de l'unicité de l'email
     const existingClient = await Client.findOne({ email });
     if (existingClient) {
       return res.status(400).json({ message: "Cet email est déjà utilisé." });
     }
 
-    // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(motDePasse, 10);
 
-    // Création du client
     const client = await Client.create({
       uuid: uuidv4(),
       nom,
@@ -34,9 +27,6 @@ exports.registerClient = async (req, res) => {
       motDePasse: hashedPassword,
     });
 
-    console.log('✅ Client créé avec succès :', client._id);
-
-    // Réponse
     res.status(201).json({
       message: "Inscription réussie !",
       client: {
@@ -54,8 +44,6 @@ exports.registerClient = async (req, res) => {
   }
 };
 
-
-
 // ✅ Connexion client
 exports.loginClient = async (req, res) => {
   try {
@@ -65,26 +53,22 @@ exports.loginClient = async (req, res) => {
       return res.status(400).json({ message: "Email et mot de passe requis." });
     }
 
-    // Recherche du client
     const client = await Client.findOne({ email });
     if (!client) {
       return res.status(401).json({ message: "Identifiants invalides." });
     }
 
-    // Vérification du mot de passe
     const isMatch = await bcrypt.compare(motDePasse, client.motDePasse);
     if (!isMatch) {
       return res.status(401).json({ message: "Mot de passe incorrect." });
     }
 
-    // Génération du token
     const token = jwt.sign(
       { id: client._id, role: 'client' },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Réponse
     res.status(200).json({
       message: "Connexion réussie !",
       token,
@@ -103,29 +87,74 @@ exports.loginClient = async (req, res) => {
   }
 };
 
-
-
-// ✅ Récupérer profil client (requiert auth middleware qui met req.user)
+// ✅ Récupération profil client
 exports.getClientProfile = async (req, res) => {
   try {
     const client = await Client.findById(req.user.id).select('-motDePasse');
-
     if (!client) {
       return res.status(404).json({ message: "Client non trouvé." });
     }
 
-    res.status(200).json({
-      client: {
-        id: client._id,
-        uuid: client.uuid,
-        nom: client.nom,
-        prenom: client.prenom,
-        email: client.email
-      }
-    });
+    res.status(200).json({ client });
 
   } catch (error) {
     console.error('🔥 Erreur dans getClientProfile :', error);
     res.status(500).json({ message: "Erreur serveur.", error: error.message });
+  }
+};
+
+// ✅ Mise à jour du profil client
+exports.updateClientProfile = async (req, res) => {
+  try {
+    const updates = req.body;
+    const allowedFields = ['nom', 'prenom', 'email', 'motDePasse', 'telephone', 'adresse'];
+    const updateData = {};
+
+    for (const field of allowedFields) {
+      if (updates[field] !== undefined) {
+        updateData[field] = updates[field];
+      }
+    }
+
+    // Si mot de passe fourni, le hasher
+    if (updateData.motDePasse) {
+      updateData.motDePasse = await bcrypt.hash(updateData.motDePasse, 10);
+    }
+
+    const updatedClient = await Client.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateData },
+      { new: true, runValidators: true, context: 'query' }
+    ).select('-motDePasse');
+
+    if (!updatedClient) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    res.status(200).json({
+      message: "Profil mis à jour avec succès.",
+      client: updatedClient
+    });
+
+  } catch (error) {
+    console.error('🔥 Erreur dans updateClientProfile :', error);
+    res.status(500).json({ message: "Erreur lors de la mise à jour.", error: error.message });
+  }
+};
+
+// ✅ Suppression du compte client
+exports.deleteClientAccount = async (req, res) => {
+  try {
+    const deletedClient = await Client.findByIdAndDelete(req.user.id);
+
+    if (!deletedClient) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    res.status(200).json({ message: "Compte client supprimé avec succès." });
+
+  } catch (error) {
+    console.error('🔥 Erreur dans deleteClientAccount :', error);
+    res.status(500).json({ message: "Erreur lors de la suppression du compte.", error: error.message });
   }
 };
