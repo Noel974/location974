@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
+import { createReservation } from '../Service/Reservation';
+import { useNavigate } from "react-router-dom";
 
 interface VoitureDetailProps {
   voiture: any;
   onClose: () => void;
 }
-
+const navigate = useNavigate();
 const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
   const [imageActive, setImageActive] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -18,11 +20,28 @@ const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
     }
   }, [voiture]);
 
-  const handleReservationSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert(`Réservé du ${startDate} au ${endDate} pour la ${voiture.marque} ${voiture.modele}`);
-    setShowForm(false);
-  };
+const handleReservationSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const reservation = await createReservation({
+      vehicule: voiture._id,
+      vehiculeType: 'Voiture',
+      dateDebut: startDate,
+      dateFin: endDate
+    });
+
+    // Stocker temporairement dans le sessionStorage ou contexte
+    sessionStorage.setItem('reservation', JSON.stringify({
+      reservation,
+      vehicule: voiture
+    }));
+
+    navigate('/Confir');
+  } catch (error: any) {
+    alert(error.message || 'Erreur lors de la réservation.');
+  }
+};
 
   if (!voiture) return <p>Chargement des données voiture...</p>;
 
@@ -74,9 +93,21 @@ const VoitureDetail = ({ voiture, onClose }: VoitureDetailProps) => {
                 </Col>
               </Row>
 
-              <Button variant="primary" onClick={() => setShowForm(true)} className="mt-3">
-                Réserver cette voiture
-              </Button>
+   <Button
+  variant="primary"
+  className="mt-3"
+  onClick={() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setShowForm(true);
+    } else {
+      window.location.href = '/auth'; // ou utilise React Router si tu l’as
+    }
+  }}
+>
+  Réserver cette voiture
+</Button>
+
             </Col>
           </Row>
 

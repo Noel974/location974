@@ -7,7 +7,10 @@ interface UniversalCardProps {
   description?: string;
   onClick?: () => void;
   buttonLabel?: string;
+  buttonVariant?: string;
+  showButton?: boolean;
   children?: React.ReactNode;
+   statusText?: string; 
 }
 
 const UniversalCard: React.FC<UniversalCardProps> = ({
@@ -16,7 +19,10 @@ const UniversalCard: React.FC<UniversalCardProps> = ({
   description,
   onClick,
   buttonLabel = "Voir plus",
+  buttonVariant = "primary",
+  showButton = true,
   children,
+    statusText,
 }) => {
   return (
     <Card style={{ width: '18rem' }} className="m-3 shadow-sm">
@@ -25,8 +31,13 @@ const UniversalCard: React.FC<UniversalCardProps> = ({
         <Card.Title>{title}</Card.Title>
         {description && <Card.Text>{description}</Card.Text>}
         {children}
-        {onClick && (
-          <Button variant="primary" onClick={onClick}>
+         {statusText && (
+          <div className="mb-2">
+            <span className="text-danger fw-bold">{statusText}</span>
+          </div>
+        )}
+        {onClick && showButton && (
+          <Button variant={buttonVariant} onClick={onClick}>
             {buttonLabel}
           </Button>
         )}

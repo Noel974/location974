@@ -5,10 +5,12 @@ import FAQPage from '../pages/FAQ';
 import Home from '../pages/Home'; // Vérifiez que ce chemin est correct
 import MentionsLegales from '../pages/Mention';
 import Voiture from '../pages/Voiture';
+import AuthPage from'../pages/Auth';
 import Moto from '../pages/Moto';
 import VoitureDetailPage from '../pages/VoitureDetailsP';
 import MotoDetailPage from '../pages/MotoDetailsP';
 import ProfilPage from '../pages/Profil';
+import ConfirPage from '../pages/Confir';
 
 
 
@@ -28,6 +30,8 @@ export const router = createBrowserRouter([
       {path: 'MentionsLegales',element:<MentionsLegales/>},
       {path: 'FAQPage',element:<FAQPage/>},
       {path: 'Profil',element:<ProfilPage/>},
+      {path: 'Auth', element:<AuthPage/>},
+      {path:'Confir', element:<ConfirPage/>},
       { path: 'Voiture', element: <Voiture /> },
       { path: 'Voitures/:id', element: <VoitureDetailPage /> },
       { path: 'Moto', element: <Moto /> },

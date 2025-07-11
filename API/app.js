@@ -39,6 +39,9 @@ const voitureRoutes = require('./routes/VoitureRoutes');
 const motoRoutes = require('./routes/MotoRoutes');
 const dashboardRoutes = require('./routes/DashboardRoutes');
 const entretienRoutes = require('./routes/EntretienRoutes');
+const reservationRoutes = require('./routes/ReservationRoutes');
+
+
 
 // 🔁 Cron Job
 require('./cron/PasswordGenerator');
@@ -49,6 +52,7 @@ app.get("/", (req, res) => {
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/employes', employeRoutes);
+app.use('/api/reservations', reservationRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/voitures', voitureRoutes);
 app.use('/api/moto', motoRoutes);

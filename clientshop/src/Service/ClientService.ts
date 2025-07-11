@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL de base de l’API
-const API_URL = 'https://location974.onrender.com/api/client/';
+const API_URL = 'https://location974.onrender.com/api/clients/client/';
 
 // --------------------
 // Interfaces TypeScript
@@ -55,7 +55,7 @@ export const loginClient = async (
   credentials: LoginCredentials
 ): Promise<{ client: ClientProfile; token: string }>=>{
   try {
-    const response = await axios.post(`${API_URL}/login`, credentials);
+    const response = await axios.post(`${API_URL}login`, credentials);
 
     // Stocke le token et l'ID du client après connexion
 const { token, client } = response.data;
@@ -73,7 +73,7 @@ return { token, client };
 export const getClientProfile = async (): Promise<ClientProfile> => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}`, {
+    const response = await axios.get(`${API_URL}profile`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
