@@ -30,19 +30,23 @@ const handleRegister = async () => {
   }
 };
 
-  const handleLogin = async () => {
-    try {
-      const { client } = await loginClient(loginData);
-      alert(`Connexion réussie, bon retour ${client.prenom} !`);
-      localStorage.setItem('client', JSON.stringify(client)); // Ajoute cette ligne si pas déjà faite
+const handleLogin = async () => {
+  try {
+    const { client } = await loginClient(loginData);
+    alert(`Connexion réussie, bon retour ${client.prenom} !`);
+    localStorage.setItem('client', JSON.stringify(client));
+    window.dispatchEvent(new Event('clientChanged'));
 
-// Déclenche un événement personnalisé
-window.dispatchEvent(new Event('clientChanged'));
-
-    } catch (err: any) {
-      alert(err.message || "Erreur pendant la connexion.");
+    // Vérifie si on est déjà sur la page voitureDetail
+    const currentPath = window.location.pathname;
+    if (!currentPath.includes('voitureDetail')) {
+      window.location.href = '/'; // Redirige vers la page d'accueil
     }
-  };
+  } catch (err: any) {
+    alert(err.message || "Erreur pendant la connexion.");
+  }
+};
+
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100 bg-light">
