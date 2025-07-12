@@ -6,6 +6,10 @@ const clientSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+    photoUrl: {
+    type: String,
+    default: null,
+  },
   nom: {
     type: String,
     required: true,
@@ -41,7 +45,7 @@ const clientSchema = new mongoose.Schema({
       enum: ['CNI', 'passport', 'permis de conduire'],
       default: null,
     },
-    documentUrl: {
+        documentUrl: {
       type: String,
       default: null,
     },

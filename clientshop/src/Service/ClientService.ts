@@ -72,7 +72,7 @@ export const loginClient = async (
 export const getClientProfile = async (): Promise<ClientProfile> => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}update`, {
+    const response = await axios.get(`${API_URL}profile`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -89,7 +89,7 @@ export const updateClientProfile = async (
 ): Promise<ClientProfile> => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.put(`${API_URL}delete`, updateData, {
+    const response = await axios.put(`${API_URL}update`, updateData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -104,7 +104,7 @@ export const updateClientProfile = async (
 export const deleteClientAccount = async (): Promise<{ message: string }> => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.delete(`${API_URL}me`, {
+    const response = await axios.delete(`${API_URL}delete`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

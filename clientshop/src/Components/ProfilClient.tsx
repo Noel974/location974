@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Alert, Button, Card, Spinner } from 'react-bootstrap';
 import { getClientProfile } from '../Service/ClientService';
-import { Button, Card, Spinner, Alert } from 'react-bootstrap';
+import FormulaireMiseAJourClient from './Formulaire';
 
 const ProfilClient: React.FC = () => {
   const [client, setClient] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [erreur, setErreur] = useState('');
+  const [editMode, setEditMode] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,9 +29,21 @@ const ProfilClient: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleUpdate = () => {
-    alert('Fonction de mise à jour à implémenter');
-  };
+const handleUpdate = () => {
+  setEditMode(true);
+};
+if (editMode) {
+  return (
+    <FormulaireMiseAJourClient
+      client={client}
+      onClose={() => setEditMode(false)}
+      onUpdateSuccess={(updated) => {
+        setClient(updated);
+        setEditMode(false);
+      }}
+    />
+  );
+}
 
   const handleDelete = () => {
     const confirmed = window.confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');

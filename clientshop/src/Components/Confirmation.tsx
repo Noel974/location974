@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
-import { getClientProfile } from '../Service/ClientService';
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { getClientProfile } from "../Service/ClientService";
 
 interface Vehicule {
   imageUrls?: string[];
@@ -15,19 +15,22 @@ interface Reservation {
 }
 
 const Confirmation: React.FC = () => {
-  const [client, setClient] = useState<Awaited<ReturnType<typeof getClientProfile>> | null>(null);
+  const [client, setClient] = useState<Awaited<
+    ReturnType<typeof getClientProfile>
+  > | null>(null);
   const [vehicule, setVehicule] = useState<Vehicule | null>(null);
   const [reservation, setReservation] = useState<Reservation | null>(null);
+const isPaymentAllowed = client?.adresse &&client?.telephone && client?.permis && client?.photo;
 
   useEffect(() => {
-    const reservationData = sessionStorage.getItem('reservation');
+    const reservationData = sessionStorage.getItem("reservation");
 
     const fetchData = async () => {
       try {
         const profile = await getClientProfile();
         setClient(profile);
       } catch (err: any) {
-        console.error('Erreur profil client :', err.message);
+        console.error("Erreur profil client :", err.message);
       }
     };
 
@@ -60,29 +63,51 @@ const Confirmation: React.FC = () => {
             <Card.Body>
               <Card.Title>Informations client</Card.Title>
               <Card.Text>
-                <strong>Nom :</strong> {client.prenom} {client.nom}<br />
-                <strong>Email :</strong> {client.email}<br />
-                <strong>Téléphone :</strong> {client.telephone || 'Non renseigné'}<br />
-                <strong>Adresse :</strong> {client.adresse || 'Non renseignée'}<br />
+                <strong>Nom :</strong> {client.prenom} {client.nom}
+                <br />
+                <strong>Email :</strong> {client.email}
+                <br />
+                <strong>Téléphone :</strong>{" "}
+                {client.telephone || "Non renseigné"}
+                <br />
+                <strong>Adresse :</strong> {client.adresse || "Non renseignée"}
+                <br />
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
         <Col md={6}>
           <Card className="shadow">
+            <Card.Title>Informations Voiture</Card.Title>
+
             {vehicule.imageUrls?.[0] && (
-              <Card.Img variant="top" src={vehicule.imageUrls[0]} alt={`${vehicule.marque} ${vehicule.modele}`} />
+              <Card.Img
+                variant="top"
+                src={vehicule.imageUrls[0]}
+                alt={`${vehicule.marque} ${vehicule.modele}`}
+              />
             )}
             <Card.Body>
-              <Card.Title>{vehicule.marque} {vehicule.modele}</Card.Title>
+              <Card.Title>
+                {vehicule.marque} {vehicule.modele}
+              </Card.Title>
               <Card.Text>
-                <strong>Du :</strong> {new Date(reservation.dateDebut).toLocaleDateString()}<br />
-                <strong>Au :</strong> {new Date(reservation.dateFin).toLocaleDateString()}<br />
+                <strong>Du :</strong>{" "}
+                {new Date(reservation.dateDebut).toLocaleDateString()}
+                <br />
+                <strong>Au :</strong>{" "}
+                {new Date(reservation.dateFin).toLocaleDateString()}
+                <br />
                 <strong>Prix total :</strong> {reservation.prixTotal} €<br />
               </Card.Text>
-              <Button variant="success" className="mt-2">
-                Payer
-              </Button>
+<Button
+  variant="success"
+  className="mt-2"
+  disabled={!isPaymentAllowed}
+>
+  Payer
+</Button>
+
             </Card.Body>
           </Card>
         </Col>

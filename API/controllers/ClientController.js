@@ -1,6 +1,7 @@
 const Client = require('../models/Client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('../utils/config-cloudinary');
 const { v4: uuidv4 } = require('uuid');
 
 // ✅ Inscription client
@@ -107,8 +108,10 @@ exports.getClientProfile = async (req, res) => {
 exports.updateClientProfile = async (req, res) => {
   try {
     const updates = req.body;
-    const allowedFields = ['nom', 'prenom', 'email', 'motDePasse', 'telephone', 'adresse'];
     const updateData = {};
+
+    // Champs classiques autorisés
+    const allowedFields = ['nom', 'prenom', 'email', 'motDePasse', 'telephone', 'adresse'];
 
     for (const field of allowedFields) {
       if (updates[field] !== undefined) {
@@ -116,9 +119,23 @@ exports.updateClientProfile = async (req, res) => {
       }
     }
 
-    // Si mot de passe fourni, le hasher
+    // Hash du mot de passe si fourni
     if (updateData.motDePasse) {
       updateData.motDePasse = await bcrypt.hash(updateData.motDePasse, 10);
+    }
+
+    // 📸 Gestion de la photo
+    if (req.file) {
+      updateData.photoUrl = req.file.path;
+    }
+
+    // 🧾 Mise à jour de verificationIdentite
+    if (updates.verificationIdentite) {
+      updateData.verificationIdentite = {};
+      const { documentType, statut } = updates.verificationIdentite;
+
+      if (documentType !== undefined) updateData.verificationIdentite.documentType = documentType;
+      if (statut !== undefined) updateData.verificationIdentite.statut = statut;
     }
 
     const updatedClient = await Client.findByIdAndUpdate(
@@ -142,19 +159,41 @@ exports.updateClientProfile = async (req, res) => {
   }
 };
 
+
+// 🔧 Utilitaire pour extraire le public_id Cloudinary à partir de l'URL
+const extractPublicId = (url) => {
+  const segments = url.split('/');
+  const filename = segments[segments.length - 1]; // Ex: photo-123456.jpg
+  return `location-client/${filename.split('.')[0]}`; // Ex: location-client/photo-123456
+};
+
 // ✅ Suppression du compte client
 exports.deleteClientAccount = async (req, res) => {
   try {
-    const deletedClient = await Client.findByIdAndDelete(req.user.id);
+    const client = await Client.findById(req.user.id);
 
-    if (!deletedClient) {
+    if (!client) {
       return res.status(404).json({ message: "Client non trouvé." });
     }
 
-    res.status(200).json({ message: "Compte client supprimé avec succès." });
+    // 🧹 Suppression des images sur Cloudinary
+    const urlsToDelete = [];
+
+    if (client.photoUrl) urlsToDelete.push(client.photoUrl);
+    if (client.verificationIdentite?.documentUrl) urlsToDelete.push(client.verificationIdentite.documentUrl);
+
+    for (const url of urlsToDelete) {
+      const publicId = extractPublicId(url);
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    // 🔥 Suppression du client en base
+    await Client.findByIdAndDelete(req.user.id);
+
+    res.status(200).json({ message: "Compte client et fichiers supprimés avec succès." });
 
   } catch (error) {
-    console.error('🔥 Erreur dans deleteClientAccount :', error);
+    console.error('🔥 Erreur deleteClientAccount :', error);
     res.status(500).json({ message: "Erreur lors de la suppression du compte.", error: error.message });
   }
 };
