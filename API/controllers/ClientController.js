@@ -110,7 +110,6 @@ exports.updateClientProfile = async (req, res) => {
     const updates = req.body;
     const updateData = {};
 
-    // Champs classiques autorisés
     const allowedFields = ['nom', 'prenom', 'email', 'motDePasse', 'telephone', 'adresse'];
 
     for (const field of allowedFields) {
@@ -124,16 +123,21 @@ exports.updateClientProfile = async (req, res) => {
       updateData.motDePasse = await bcrypt.hash(updateData.motDePasse, 10);
     }
 
-    // 📸 Gestion de la photo
-    if (req.file) {
-      updateData.photoUrl = req.file.path;
+    // 📸 Gestion photoProfil
+    if (req.files && req.files.photoProfil && req.files.photoProfil.length > 0) {
+      updateData.photoUrl = req.files.photoProfil[0].path;
     }
 
-    // 🧾 Mise à jour de verificationIdentite
-    if (updates.verificationIdentite) {
-      updateData.verificationIdentite = {};
-      const { documentType, statut } = updates.verificationIdentite;
+    // 🧾 Gestion documentIdentite
+    if (req.files && req.files.documentIdentite && req.files.documentIdentite.length > 0) {
+      if (!updateData.verificationIdentite) updateData.verificationIdentite = {};
+      updateData.verificationIdentite.documentUrl = req.files.documentIdentite[0].path;
+    }
 
+    // Autres champs de verificationIdentite
+    if (updates.verificationIdentite) {
+      if (!updateData.verificationIdentite) updateData.verificationIdentite = {};
+      const { documentType, statut } = updates.verificationIdentite;
       if (documentType !== undefined) updateData.verificationIdentite.documentType = documentType;
       if (statut !== undefined) updateData.verificationIdentite.statut = statut;
     }
@@ -159,26 +163,22 @@ exports.updateClientProfile = async (req, res) => {
   }
 };
 
-
-// 🔧 Utilitaire pour extraire le public_id Cloudinary à partir de l'URL
+// 🔧 Extraire le public_id de l’URL Cloudinary
 const extractPublicId = (url) => {
   const segments = url.split('/');
-  const filename = segments[segments.length - 1]; // Ex: photo-123456.jpg
-  return `location-client/${filename.split('.')[0]}`; // Ex: location-client/photo-123456
+  const filename = segments[segments.length - 1]; // photo-123456.jpg
+  return `location-client/${filename.split('.')[0]}`; // location-client/photo-123456
 };
 
 // ✅ Suppression du compte client
 exports.deleteClientAccount = async (req, res) => {
   try {
     const client = await Client.findById(req.user.id);
-
     if (!client) {
       return res.status(404).json({ message: "Client non trouvé." });
     }
 
-    // 🧹 Suppression des images sur Cloudinary
     const urlsToDelete = [];
-
     if (client.photoUrl) urlsToDelete.push(client.photoUrl);
     if (client.verificationIdentite?.documentUrl) urlsToDelete.push(client.verificationIdentite.documentUrl);
 
@@ -187,7 +187,6 @@ exports.deleteClientAccount = async (req, res) => {
       await cloudinary.uploader.destroy(publicId);
     }
 
-    // 🔥 Suppression du client en base
     await Client.findByIdAndDelete(req.user.id);
 
     res.status(200).json({ message: "Compte client et fichiers supprimés avec succès." });
