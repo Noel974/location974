@@ -12,9 +12,9 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
-
-module.exports = upload.fields([
+const getUploadMiddleware = () => multer({ storage }).fields([
   { name: 'photoProfil', maxCount: 1 },
-  { name: 'documentIdentite', maxCount: 1}
+  { name: 'documentIdentite', maxCount: 1 }
 ]);
+
+module.exports = getUploadMiddleware;
