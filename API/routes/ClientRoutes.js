@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const clientController = require('../controllers/ClientController');
 const { verifyToken } = require('../middleware/AuthClient');
-const {upload} = require('../middleware/Multer-Client');
+const upload = require('../middleware/Multer-Client');
 
 router.get('/client/profile', verifyToken, clientController.getClientProfile);
 
